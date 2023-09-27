@@ -1,0 +1,56 @@
+# General
+*.log
+*.swp
+*.bak
+*.tmp
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.env  # environment variables
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# Kivy
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Buildozer
+bin/
+.buildozer/
+
+# SQLite
+*.db
+*.sqlite
+
+# Matplotlib
+matplotlibrc
+*.mplstyle
+
+# Pandas
+*.pkl
+
+# Pygame
+*.pgm
+*.wav
+
+# Cachetools
+*.cache
+
+# pytest
+.pytest_cache/
+*.pytest_cache/
+
+# PyHamcrest
+*.egg-info/
+
+# pyinputplus
+# (usually no extra files to ignore)
+
+# Additional Libraries
+# Add any other library-specific files you want to ignore
