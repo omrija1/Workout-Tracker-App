@@ -1,0 +1,29 @@
+
+Use Case 9: User-Triggered Audio Feedback During Workouts
+
+Actors: User, System
+
+1. User -> System: InitiateWorkoutSession()
+2. System -> User: DisplayWorkoutScreen()
+3. User -> System: StartSet()
+4. System -> User: DisplayTimer()
+5. System -> AudioAPI: StartRestTimer()
+6. AudioAPI -> System: TimerStarted()
+7. User -> System: CompleteSet()
+8. System -> User: StopTimer()
+
+Condition: If the timer reaches zero.
+9. AudioAPI -> System: PlayAudioCue()
+10. System -> User: DisplayAudioCue()
+
+Condition: If the user wants to proceed to the next set.
+11. User -> System: ConfirmNextSet()
+12. System -> Database: LogSetCompletion()
+13. Database -> System: LogConfirmation()
+14. System -> User: DisplayNextSet()
+
+Error Handling Flows:
+- If the timer fails to start, an error message is displayed.
+- If the audio cue fails to play, an error message is displayed.
+
+Postconditions: The user receives audio cues at the end of each rest period, helping them to accurately time their sets.

@@ -1,0 +1,41 @@
+
+Sequence Diagram for Use Case 7: Editing and Deleting Workouts While Preserving Performance History
+
+1. User -> System: OpenApp()
+    Condition: User is authenticated and on the main dashboard.
+
+2. System -> User: DisplayDashboard()
+    Note: Dashboard contains a section for workout history.
+
+3. User -> System: NavigateToWorkoutHistory()
+
+4. System -> Database: FetchWorkoutHistory(UserID)
+    Error: If unable to fetch, go to step 4E.
+    
+4E. System -> User: DisplayError("Unable to fetch workout history.")
+
+5. Database -> System: ReturnWorkoutHistory()
+
+6. System -> User: DisplayWorkoutHistory(workouts)
+
+7. User -> System: SelectWorkoutToEditOrDelete(WorkoutID)
+
+8. System -> User: DisplayConfirmationDialogue("Edit or Delete?")
+    Note: User chooses between editing or deleting the selected workout.
+
+9. User -> System: ConfirmChoice(choice)
+
+10. System -> Database: EditOrDeleteWorkout(WorkoutID, choice)
+    Condition: If 'Edit', navigate user to edit screen. If 'Delete', remove workout from database.
+    Error: If unable to edit or delete, go to step 10E.
+    
+10E. System -> User: DisplayError("Unable to complete the action.")
+    
+11. Database -> System: ReturnConfirmation()
+
+12. System -> User: DisplaySuccessMessage("Workout successfully edited/deleted.")
+    Note: If 'Edit', the user is directed to the editing screen. If 'Delete', the workout is removed from the list.
+
+Postconditions: 
+    - If 'Edit', the user is redirected to the workout editing screen.
+    - If 'Delete', the workout is deleted from the dashboard but remains in the performance history chart.

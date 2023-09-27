@@ -1,0 +1,31 @@
+
+Sequence Diagram for Use Case 6: Personalized Dashboard Display
+
+1. User -> System: OpenApp()
+    Condition: User must be authenticated.
+
+2. System -> Database: FetchUserData(userID)
+    Database -> System: ReturnUserData()
+
+3. System -> Database: FetchUpcomingWorkouts(userID)
+    Database -> System: ReturnUpcomingWorkouts()
+
+4. System -> Database: FetchRecentPerformanceMetrics(userID)
+    Database -> System: ReturnRecentPerformanceMetrics()
+
+5. System -> Database: FetchWeightHistory(userID)
+    Database -> System: ReturnWeightHistory()
+
+6. System -> User: DisplayDashboard(userData, upcomingWorkouts, recentPerformanceMetrics, weightHistory)
+
+    Error Handling:
+    - If Database fails to fetch any data, an error message is displayed to the user.
+
+7. User -> System: NavigateToOtherSections()
+    Condition: User can navigate to other sections of the app from the dashboard.
+
+8. System -> User: RedirectToSelectedSection()
+
+Postconditions: 
+- User receives an at-a-glance understanding of their fitness status and next steps.
+- User can navigate to other sections of the application.

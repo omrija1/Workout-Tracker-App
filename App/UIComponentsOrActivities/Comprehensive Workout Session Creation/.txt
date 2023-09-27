@@ -1,0 +1,1 @@
+UI for creating a new workout session.

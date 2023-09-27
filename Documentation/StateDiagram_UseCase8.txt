@@ -1,0 +1,33 @@
+
+State Diagram for Use Case 8: User-Centric Exercise Library for Custom Workouts
+
+States:
+1. Initial State (Authenticated)
+2. Displaying Dashboard
+3. Navigating to Exercise Library
+4. Displaying Exercise Library
+5. Creating or Choosing Exercise
+6. Filling Exercise Form
+7. Saving or Updating Exercise
+8. Displaying Save or Update Result
+9. Adding to Workout
+10. Updating Workout with Exercise
+11. Displaying Workout Update Result
+12. Redirecting Back to Dashboard
+13. Error State (Database or Validation error)
+
+Transitions and Conditions:
+1. OpenApp(): Initial State -> Displaying Dashboard
+2. NavigateToExerciseLibrary(): Displaying Dashboard -> Navigating to Exercise Library
+3. DisplayExerciseLibrary(): Navigating to Exercise Library -> Displaying Exercise Library
+4. SelectCreateOrChooseExercise(option): Displaying Exercise Library -> Creating or Choosing Exercise
+5. DisplayForm(option): Creating or Choosing Exercise -> Filling Exercise Form
+6. SubmitForm(exerciseDetails): Filling Exercise Form -> Saving or Updating Exercise
+7. SaveOrUpdateResult(): Saving or Updating Exercise -> Displaying Save or Update Result
+8. AddToWorkout(): Displaying Save or Update Result -> Adding to Workout
+9. UpdateWorkoutWithExercise(exerciseDetails): Adding to Workout -> Updating Workout with Exercise
+10. UpdateWorkoutResult(): Updating Workout with Exercise -> Displaying Workout Update Result
+11. RedirectBackToDashboard(): Displaying Workout Update Result -> Redirecting Back to Dashboard
+
+Actions (Optional):
+- Display an error message: If any database operation fails or if validation fails

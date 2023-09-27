@@ -1,0 +1,128 @@
+Introduction
+The Workout Tracker App aims to be a robust, fully integrated solution for professional trainers for their clients and individual fitness enthusiasts.
+It is designed to offer a highly personalized exercise experience, complete with detailed workout customization, advanced performance tracking, 
+and strategic fitness method based on proven scientific principle like progressive overload for better performance tracking
+
+Technical Stack
+IDE: Visual Studio Code
+Programming Language: Python
+Front-End Framework: Kivy
+Back-End Database: SQLite
+Data Visualization: matplotlib, pandas
+Audio Feedback: pygames for audio, SoundLibrary (python Sound Library) 
+Caching: cachetools
+Testing Suite: pytest with PyHamcrest
+Input Validation: pyinputplus (optional but under consideration)
+Additional Tools and Libraries
+Buildozer: For packaging the Kivy app for Android.
+Pyjnius: For calling Java methods from Python.
+Plyer: For access to features like notifications and reminders on Android devices.
+Use Cases
+Each use case will now include 'Exception Flows' and 'Postconditions' to provide more depth.
+
+Use Case 1: User Onboarding and System Initialization
+Exception Flows: If validation fails, the user is prompted to correct the information.
+Postconditions: User account is created, and the user is directed to the main dashboard.
+Use Case 2: Comprehensive Workout Session Creation
+Exception Flows: If an exercise or set is incorrectly defined, a validation message appears.
+Postconditions: A new workout session is created and saved, ready for future reference or execution.
+Use Case 3: Advanced Performance and Weight Tracking
+Exception Flows: If data is inconsistent or missing, the system prompts for correct input.
+Postconditions: Performance metrics and weight history are updated and visualized.
+Use Case 4: Dynamic Reminders and Notifications
+Exception Flows: If the user attempts to set conflicting reminders, a warning is issued.
+Postconditions: Reminders are set and will trigger notifications at the specified times.
+Use Case 5: Workout History and Duplication
+Exception Flows: If system fails to duplicate a workout, an error message is displayed.
+Postconditions: A duplicated workout session is created, separate from the original, and available for editing.
+
+
+Use Case 6: Personalized Dashboard Display
+Actors: User, System
+Preconditions: User is authenticated
+Primary Flow:
+User accesses the main dashboard.
+System displays an overview of upcoming workouts, recent performance metrics, and weight history.
+Postconditions: User receives an at-a-glance understanding of their fitness status and next steps.
+
+Use Case 7: Editing and Deleting Workouts While Preserving Performance History
+Actors: User, System
+Preconditions: User is authenticated and has previously logged workouts.
+Primary Flow:
+User navigates to their workout history.
+User selects a workout to edit or delete.
+System prompts the user for confirmation, stating that changes will not affect the performance history.
+User confirms the action.
+System processes the request and updates the dashboard database but leaves the performance history unchanged.
+Exception Flows: If the system fails to process the edit or delete request, an error message is displayed.
+Postconditions: The specified workout is either edited or removed from the user's workout history dashboard, but the original data remains intact in the performance history chart.
+
+Use Case 8: User-Centric Exercise Library for Custom Workouts
+Actors: User, System
+Preconditions: User is authenticated.
+Primary Flow:
+User navigates to the exercise library section within the app.
+System displays the user's custom exercise library, which only contains exercises previously added by the user.
+User has the option to add new custom exercises to their library.
+User selects or creates exercises for their upcoming workout.
+Exception Flows: If the system fails to save a newly created custom exercise, an error message is displayed.
+Postconditions: Selected exercises are added to the current workout session. Any new custom exercises are saved to the user's personal library for future use.
+
+
+Use Case 9: User-Triggered Audio Feedback During Workouts
+Actors: User, System
+Preconditions: User is authenticated and has initiated a workout session.
+Primary Flow:
+User starts a workout session within the app.
+After completing a set, the user interacts with the app to indicate that the set is finished.
+A timer for the rest period starts in the app.
+When the rest period ends, the system provides an audio cue to alert the user that it's time to start the next set.
+Exception Flows: If the app fails to provide an audio cue, an error message is displayed.
+Postconditions: The user receives audio cues at the end of each rest period, helping them to accurately time their sets.
+
+Use Case 10: Motivational Quote Display
+Actors: User, System
+Preconditions: User is authenticated.
+Primary Flow:
+User opens the app.
+System displays a motivational quote.
+Quote changes every 24 hours.
+Postconditions: User is greeted with a motivational quote upon app opening.
+
+Use Case 11: User Profile and Settings
+Actors: User, System
+Preconditions: User is authenticated.
+Primary Flow:
+User navigates to the settings or profile section.
+User can update age, height, weight, and gender.
+System saves the changes.
+Postconditions: User's profile information is updated.
+
+
+
+Story Cases
+User Stories
+User-Specific Workout Methods: As a user, I want to select a training method (endurance, strength, balance, flexibility) for each exercise, allowing for more targeted workouts.
+
+Rest Time Customization: As a user, I want the ability to specify the rest time between sets, which can be different for each exercise within a workout.
+
+Performance Graphs: As a user, I want to view graphs that not only show my weight changes but also other performance indicators like frequency of workouts, volume, and intensity over time.
+
+Notification Customization: As a user, I want to customize the notifications I receive for reminders, allowing me to change their frequency only.
+
+Progressive Overload Integration: As a user, I want the system to automatically calculate progressive overload parameters based on my workout inputs. and sending it to performance history, aiding me in planning more effective future workouts.
+
+Progressive Overload Calculation
+User Feedback Loop: Once the user new inputs from it workout are calculated, they are presented to the user at the end of his workout. which user can go to performance history to see the changes, if he advanced or not, or still same
+
+Personalized Dashboard Insights: As a user, I want a dashboard that shows me upcoming workouts, recent performance metrics, and weight history so that I can quickly grasp my fitness status and next steps.
+
+Workout Editability with Data Integrity: As a user, I want the ability to edit or delete my past workouts without affecting my performance history, providing me with the flexibility to make changes while preserving my progress data.
+
+User-Centric Exercise Selection: As a user, I want an exercise library that only contains my custom exercises, making it easier for me to add exercises to my workout and keep track of what works best for me.
+
+Audio Cues for Timed Rest: As a user, I want the app to give me an audio cue when my rest period has ended, allowing me to focus on my workout without constantly checking the timer.
+
+Motivational Quote: As a user, I want to see a different motivational quote each day when I open the app, to start my fitness journey on a positive note.
+
+Profile Customization: As a user, I want to be able to update my age, height, weight, and gender in my profile, so that the app can provide more personalized recommendations and tracking.

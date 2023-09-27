@@ -1,0 +1,53 @@
+
+Sequence Diagram for Use Case 3: Advanced Performance and Weight Tracking
+
+Actors: User, System, Database
+
+1. User -> System: OpenPerformanceTracking()
+   Note: User navigates to the performance tracking section.
+
+2. System -> Database: FetchUserData()
+   Note: System fetches the necessary user data for performance metrics.
+   
+3. Database -> System: ReturnUserData()
+   Note: Database returns the requested user data.
+
+Condition: If Database returns an error, go to step 3a. Otherwise, proceed to step 4.
+
+3a. Database -> System: ReturnError()
+    System -> User: DisplayError()
+    Note: An error message is shown, and the user can retry or exit.
+    Return to step 2.
+
+4. System -> User: DisplayPerformanceMetrics()
+   Note: System processes the user data and displays performance metrics.
+
+5. User -> System: UpdateWeight(new_weight)
+   Note: User decides to update their weight.
+
+6. System -> Database: UpdateWeightInDB(new_weight)
+   Note: System sends the updated weight to the database.
+
+Condition: If Database returns an error, go to step 6a. Otherwise, proceed to step 7.
+
+6a. Database -> System: ReturnUpdateError()
+    System -> User: DisplayUpdateError()
+    Note: An error message is shown, and the user can retry or exit.
+    Return to step 5.
+
+7. Database -> System: ConfirmUpdate()
+   Note: Database confirms that the weight was successfully updated.
+
+8. System -> User: DisplayConfirmation()
+   Note: User is notified that their weight was updated successfully.
+
+9. System -> Database: RecalculatePerformanceMetrics()
+   Note: System asks the database to recalculate performance metrics based on the new weight.
+
+10. Database -> System: ReturnUpdatedMetrics()
+    Note: Database returns the recalculated performance metrics.
+
+11. System -> User: DisplayUpdatedMetrics()
+    Note: System displays the updated performance metrics to the user.
+
+Postconditions: User's weight is updated, and performance metrics are recalculated and displayed.

@@ -1,0 +1,37 @@
+Functional Requirements
+User Authentication and Onboarding: The system must support registration, login, and account validation.
+Workout Session Creation: Users should be able to create, save, delete, duplicate, and custom workout sessions.
+Exercise Logging: Support for logging exercises, including main and secondary muscles worked, sets, reps, weight, and exercise methods (endurance, strength, balance, flexibility).
+Performance Metrics: Advanced tracking of weight, volume, frequency, intensity, and rest time.
+Visualizations: Display of performance history and weight changes in graphical formats.
+Notifications and Reminders: Dynamic setting of reminders and notifications for daily weight input and workout days.
+Progressive Overload Calculation: Automated calculation and presentation of progressive overload parameters.
+User-Centric Exercise Library: Support for custom user-defined exercises.
+Audio Feedback: Sound for rest period timing in sets.
+Motivational Quotes: Daily rotation of motivational quotes.
+Non-Functional Requirements
+Usability
+
+User-friendly and intuitive interface.
+Android compatibility.
+Reliability
+
+Secure data storage.
+Error handling and validation messages.
+Performance
+
+Quick app load times.
+Efficient data retrieval.
+Supportability
+
+Maintainable and scalable architecture.
+Comprehensive testing via pytest and PyHamcrest.
++ Additional Requirements
+Tech Stack: Python, Kivy, SQLite, matplotlib, pandas, pygames, cachetools.
+Data Integrity: Editing or deleting workouts should not affect performance history.
+Security: Data validation through Pyinputplus (optional).
+Portability: Packaging for Android using Buildozer.
+
+
+
+

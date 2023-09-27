@@ -1,0 +1,40 @@
+
+Sequence Diagram for Use Case 4: Dynamic Reminders and Notifications
+
+1. User -> System: OpenApp()
+    - Condition: If the user is authenticated, proceed to step 2. Otherwise, redirect to login.
+
+2. User -> System: NavigateToReminderScreen()
+    - System -> Database: FetchReminders()
+    - Database -> System: ReturnReminders()
+    - System -> User: DisplayReminders()
+
+3. User -> System: AddOrEditReminder()
+    - System -> User: DisplayReminderForm()
+    - User -> System: SubmitReminderForm(details)
+    - Condition: Validate the reminder details.
+        - If validation fails, return to step 3.
+    - System -> Database: SaveReminder(details)
+    - Database -> System: SaveResult()
+    - System -> User: UpdateReminderScreen()
+
+4. System -> Notification Service: ScheduleNotification(reminderDetails)
+    - Condition: Based on the user's input, schedule the reminder as a notification.
+    - Notification Service -> System: NotificationStatus()
+
+5. At the specified time:
+    - Notification Service -> User: PushNotification()
+    - User -> Notification Service: AcknowledgeNotification()
+    - Notification Service -> System: UpdateNotificationStatus()
+    - System -> Database: LogNotificationEvent()
+    - Database -> System: LogStatus()
+
+6. User -> System: DeleteReminder()
+    - System -> User: ConfirmDelete()
+    - User -> System: ConfirmAction()
+    - System -> Database: DeleteReminder()
+    - Database -> System: DeleteResult()
+    - System -> User: UpdateReminderScreen()
+    - Condition: If deletion fails, display an error message.
+
+Postconditions: Reminders are dynamically set and trigger notifications at the specified times. Reminders can be edited or deleted.

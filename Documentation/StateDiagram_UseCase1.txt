@@ -1,0 +1,31 @@
+
+State Diagram for Use Case 1: User Onboarding and System Initialization
+
+States:
+1. App Closed
+2. App Opened
+3. Welcome Screen Displayed
+4. Registration/Login Selection
+5. Registration Form Displayed
+6. Login Form Displayed
+7. Validation Process
+8. Dashboard Displayed
+
+Transitions:
+- App Closed -> App Opened: User opens the app
+- App Opened -> Welcome Screen Displayed: System initializes
+- Welcome Screen Displayed -> Registration/Login Selection: User swipes/presses continue
+- Registration/Login Selection -> Registration Form Displayed: User selects 'Register'
+- Registration/Login Selection -> Login Form Displayed: User selects 'Login'
+- Registration Form Displayed -> Validation Process: User submits registration details
+- Login Form Displayed -> Validation Process: User submits login details
+- Validation Process -> Dashboard Displayed: Successful validation
+- Validation Process -> Registration Form Displayed: Failed registration validation, loop back
+- Validation Process -> Login Form Displayed: Failed login validation, loop back
+
+Conditions:
+- Transition to Validation Process: Can happen only if the form details meet preliminary checks (e.g., format of email, password strength).
+- Transition from Validation Process to Dashboard: Can happen only if the database confirms the details.
+
+Error Handling:
+- Invalid form submission: Loop back to respective form (either Registration Form or Login Form) with an error message.

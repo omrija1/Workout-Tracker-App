@@ -1,0 +1,51 @@
+
+Sequence Diagram for Use Case 8: User-Centric Exercise Library for Custom Workouts
+
+Actors: User, System, Database
+
+1. User -> System: OpenApp()
+   Condition: User must be authenticated.
+
+2. System -> User: DisplayDashboard()
+   
+3. User -> System: NavigateToExerciseLibrary()
+
+4. System -> User: DisplayExerciseLibrary()
+   Condition: The library displays exercises previously added by the user.
+
+5. User -> System: SelectCreateOrChooseExercise()
+   Multiple Choices: Either Create a new exercise or Choose an existing one.
+
+6. System -> User: DisplayForm(selectedOption)
+   
+7. User -> System: SubmitForm(exerciseDetails)
+   Condition: If user selects to create a new exercise, the details would include exercise name, main muscle, secondary muscles etc.
+
+8. System -> Database: SaveOrUpdateExercise(exerciseDetails)
+   Condition: If it's a new exercise, it will be saved. If it's an existing one, it will be updated.
+
+9. Database -> System: SaveOrUpdateResult()
+
+10. System -> User: ShowSaveOrUpdateResult()
+    Condition: If the operation is successful, a success message is displayed. Else, an error message is displayed.
+
+11. User -> System: AddToWorkout()
+    Condition: If the user is satisfied with the exercise, they can add it to a workout.
+
+12. System -> Database: UpdateWorkoutWithExercise(exerciseDetails)
+
+13. Database -> System: UpdateWorkoutResult()
+
+14. System -> User: ShowUpdateWorkoutResult()
+    Condition: If the operation is successful, a success message is displayed. Else, an error message is displayed.
+
+15. System -> User: RedirectBackToDashboard()
+
+Error Handling:
+- If any database operation fails, an error message should be displayed to the user.
+- If the user tries to create an exercise that already exists, a validation message should be displayed.
+
+Postconditions: 
+- If a new exercise is created, it is saved in the user's personal exercise library.
+- If an existing exercise is updated, the changes are reflected in the user's personal exercise library.
+- The selected exercises can be added to the current workout session.

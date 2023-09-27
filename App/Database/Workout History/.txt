@@ -1,0 +1,1 @@
+Stores records of all past workouts.

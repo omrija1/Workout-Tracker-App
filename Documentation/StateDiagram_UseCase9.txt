@@ -1,0 +1,21 @@
+
+State Diagram for Use Case 9: Daily Motivational Quotes
+
+States:
+1. Initial State (Authenticated)
+2. Displaying Dashboard
+3. Fetching Last Quote Timestamp
+4. Requesting New Quote
+5. Saving Quote and Timestamp
+6. Displaying Motivational Quote
+7. Error State (Database or API error)
+
+Transitions and Conditions:
+1. OpenApp(): Initial State -> Displaying Dashboard
+2. FetchLastQuoteTimestamp(): Displaying Dashboard -> Fetching Last Quote Timestamp
+3. RequestNewQuote(): Fetching Last Quote Timestamp -> Requesting New Quote
+4. SaveQuoteAndTimestamp(quote): Requesting New Quote -> Saving Quote and Timestamp
+5. DisplayMotivationalQuote(quote): Saving Quote and Timestamp -> Displaying Motivational Quote
+
+Actions (Optional):
+- Display an error message: If any database operation fails or if API fails

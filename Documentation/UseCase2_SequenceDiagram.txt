@@ -1,0 +1,48 @@
+
+Sequence Diagram for Use Case 2: Comprehensive Workout Session Creation
+
+1. User -> System: OpenApp()
+    Condition: User must be authenticated
+
+2. System -> User: DisplayDashboard()
+    
+3. User -> System: NavigateToWorkoutCreation()
+    
+4. System -> User: DisplayWorkoutCreationForm()
+    
+5. User -> System: SelectMuscleGroups(main_muscle, secondary_muscles)
+    
+6. System -> Database: SaveMuscleGroups(main_muscle, secondary_muscles)
+    Condition: If database operation fails, go to step 4A
+    4A. Database -> System: OperationFailed()
+    4B. System -> User: DisplayErrorMessage("Failed to save muscle groups.")
+
+7. User -> System: InputSetsRepsWeight(sets, reps, weight)
+    
+8. System -> Database: SaveSetsRepsWeight(sets, reps, weight)
+    Condition: If database operation fails, go to step 8A
+    8A. Database -> System: OperationFailed()
+    8B. System -> User: DisplayErrorMessage("Failed to save sets, reps, weight.")
+
+9. User -> System: SelectTrainingMethod(method)
+    
+10. System -> Database: SaveTrainingMethod(method)
+     Condition: If database operation fails, go to step 10A
+     10A. Database -> System: OperationFailed()
+     10B. System -> User: DisplayErrorMessage("Failed to save training method.")
+
+11. User -> System: SetRestTime(rest_time)
+    
+12. System -> Database: SaveRestTime(rest_time)
+     Condition: If database operation fails, go to step 12A
+     12A. Database -> System: OperationFailed()
+     12B. System -> User: DisplayErrorMessage("Failed to save rest time.")
+
+13. User -> System: CompleteWorkoutCreation()
+    
+14. System -> Database: FinalizeWorkout()
+     Condition: If database operation fails, go to step 14A
+     14A. Database -> System: OperationFailed()
+     14B. System -> User: DisplayErrorMessage("Failed to create workout.")
+
+15. System -> User: DisplaySuccessMessage("Workout created successfully.")

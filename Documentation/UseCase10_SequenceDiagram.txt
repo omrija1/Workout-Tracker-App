@@ -1,0 +1,26 @@
+
+Use Case 10: Motivational Quote Display
+Actors: User, System, Database
+
+1. User -> System: OpenApp()
+    Condition: User is authenticated and app is opened.
+
+2. System -> Database: FetchLastQuoteTimestamp()
+    2.1. Database -> System: ReturnLastQuoteTimestamp()
+    Condition: If the last fetched quote timestamp is older than 24 hours, proceed to step 3. Otherwise, go to step 6.
+
+3. System -> Motivational Quote API: FetchDailyQuote()
+    3.1. Motivational Quote API -> System: ReturnQuote()
+    Condition: If API fails, an error is logged and default quote is used.
+
+4. System -> Database: SaveQuoteAndTimestamp(quote)
+    4.1. Database -> System: AcknowledgeSave()
+
+5. System -> User: DisplayMotivationalQuote(quote)
+
+6. System -> User: DisplayDashboard()
+
+-- Error Handling Flows --
+- If Database fails to fetch the last quote timestamp, a default quote is shown.
+- If Database fails to save the new quote, an error is logged but the flow continues.
+- If API fails to return a new quote, a default quote is used.

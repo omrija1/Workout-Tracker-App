@@ -1,0 +1,26 @@
+
+State Diagram for Use Case 5: Workout History and Duplication
+
+States:
+1. Initial State
+2. Fetching Workout History
+3. Displaying No History Message
+4. Displaying Workout History
+5. Confirming Duplication
+6. Duplicating Workout
+7. Displaying Duplication Success
+8. Navigating to Edit Workout
+9. Error State (Duplication Failed)
+
+Transitions and Conditions:
+1. OpenWorkoutHistory(): Initial State -> Fetching Workout History
+2. NoHistoryFound() & DisplayNoHistoryMessage(): Fetching Workout History -> Displaying No History Message
+3. ReturnWorkoutHistory(): Fetching Workout History -> Displaying Workout History
+4. SelectWorkoutToDuplicate(workoutID): Displaying Workout History -> Confirming Duplication
+5. Confirm(): Confirming Duplication -> Duplicating Workout
+6. DuplicationSuccess(newWorkoutID): Duplicating Workout -> Displaying Duplication Success
+   - Condition: If duplication fails, go to Error State
+7. NavigateToEditWorkout(newWorkoutID): Displaying Duplication Success -> Navigating to Edit Workout
+
+Actions (Optional):
+- DisplayDuplicationFailedMessage(): If duplication fails
