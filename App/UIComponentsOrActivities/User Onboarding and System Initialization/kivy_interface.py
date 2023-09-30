@@ -100,7 +100,7 @@ class MyApp(App):
     
 # Function to build
     def build(self):
-        db_setup.initialize_database()
+        db_setup.initialize_database("database_name.db")
         return UserOnboarding()
 
 

@@ -1,28 +1,32 @@
+import bcrypt
 import sqlite3
 import hashlib
 import re
 
-def initialize_database():
+def initialize_database(database_name):
     """
     Initialize the SQLite database and create the profiles table if it doesn't exist.
     """
-    conn = sqlite3.connect('user_profiles.db')
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS profiles
-                 (username TEXT PRIMARY KEY,
-                  email TEXT UNIQUE,
-                  password TEXT)''')
-    conn.commit()
-    conn.close()
+    with sqlite3.connect(database_name) as conn:
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS profiles
+                     (username TEXT PRIMARY KEY,
+                      email TEXT UNIQUE,
+                      password TEXT)''')
+        conn.commit()
     
 # Function to validate_email_password
 def validate_email_password(email, password):
     """
     Validate the email and password based on predefined rules.
     """
-    email_valid = re.match(r"[^@]+@[^@]+\.[^@]+", email)
+    try:
+        email_valid = re.fullmatch(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", email)
+    except re.error:
+        return False
+    
     password_strong = len(password) >= 8
-    return email_valid and password_strong
+    return email_valid is not None and password_strong
 
 # Function to add_user
 def add_user(username, email, password):
@@ -33,7 +37,8 @@ def add_user(username, email, password):
         return "Invalid email format or weak password."
     conn = sqlite3.connect('user_profiles.db')
     c = conn.cursor()
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode(), salt).decode()
     try:
         c.execute("INSERT INTO profiles (username, email, password) VALUES (?, ?, ?)",
                   (username, email, hashed_password))
