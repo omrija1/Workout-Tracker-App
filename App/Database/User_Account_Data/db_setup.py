@@ -30,6 +30,8 @@ def validate_email_password(email, password):
 
 # Function to add_user
 def add_user(username, email, password):
+    if len(username) > 12 or len(email) > 50 or len(password) > 22:
+        return "Username, email, or password too long."
     """
     Add a new user to the database.
     """
