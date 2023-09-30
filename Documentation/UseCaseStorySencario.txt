@@ -6,8 +6,8 @@ and strategic fitness method based on proven scientific principle like progressi
 Technical Stack
 IDE: Visual Studio Code
 Programming Language: Python
-Front-End Framework: Kivy
-Back-End Database: SQLite
+Front-End Framework: Kivy, KivyMD
+Back-End Database: SQLAlchemy with SQLite
 Data Visualization: matplotlib, pandas
 Audio Feedback: pygames for audio, SoundLibrary (python Sound Library) 
 Caching: cachetools
@@ -17,9 +17,11 @@ Additional Tools and Libraries
 Buildozer: For packaging the Kivy app for Android.
 Pyjnius: For calling Java methods from Python.
 Plyer: For access to features like notifications and reminders on Android devices.
+Debugging & Development Tools: Pylint and Flake8
+
+
 Use Cases
 Each use case will now include 'Exception Flows' and 'Postconditions' to provide more depth.
-
 Use Case 1: User Onboarding and System Initialization
 Exception Flows: If validation fails, the user is prompted to correct the information.
 Postconditions: User account is created, and the user is directed to the main dashboard.

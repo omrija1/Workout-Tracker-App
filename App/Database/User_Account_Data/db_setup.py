@@ -14,7 +14,8 @@ def initialize_database():
                   password TEXT)''')
     conn.commit()
     conn.close()
-
+    
+# Function to validate_email_password
 def validate_email_password(email, password):
     """
     Validate the email and password based on predefined rules.
@@ -23,6 +24,7 @@ def validate_email_password(email, password):
     password_strong = len(password) >= 8
     return email_valid and password_strong
 
+# Function to add_user
 def add_user(username, email, password):
     """
     Add a new user to the database.
@@ -42,6 +44,7 @@ def add_user(username, email, password):
     finally:
         conn.close()
 
+# Function to verify_login
 def verify_login(email, password):
     """
     Verify if the login details are correct.
