@@ -5,19 +5,30 @@ import hashlib
 import re
 import logging
 
-def initialize_database(database_name):
+def initialize_database(database_name: str) -> None:
     """
     Initialize the SQLite database and create the profiles table if it doesn't exist.
+
+    Args:
+        database_name: The name of the SQLite database file.
     """
     try:
+        # Connect to the SQLite database
         with sqlite3.connect(database_name) as conn:
-            c = conn.cursor()
-            c.execute('''CREATE TABLE IF NOT EXISTS profiles
-                     (username TEXT PRIMARY KEY,
-                      email TEXT UNIQUE,
-                      password_hash TEXT)''')
-            c.execute("PRAGMA secure_delete = ON")
-            c.execute("PRAGMA foreign_keys = ON")
+            # Create the profiles table if it doesn't exist
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS profiles (
+                    username TEXT PRIMARY KEY,
+                    email TEXT UNIQUE,
+                    password_hash TEXT
+                )
+            ''')
+            
+            # Enable secure delete and foreign key constraints
+            conn.execute("PRAGMA secure_delete = ON")
+            conn.execute("PRAGMA foreign_keys = ON")
+            
+            # Commit the changes to the database
             conn.commit()
     except sqlite3.Error as e:
         logging.error("Error initializing database: %s", str(e))
