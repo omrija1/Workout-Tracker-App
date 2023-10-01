@@ -10,39 +10,6 @@ from kivy.uix.textinput import TextInput
 from App.Database.User_Account_Data import db_setup
 
 
-# Validate Email and Password
-def validate_email_password(email, password):
-    email_valid = re.match(r"[^@]+@[^@]+\.[^@]+", email)
-    password_strong = len(password) >= 8
-    return email_valid and password_strong
-
-# Add User
-def add_user(username, email, password):
-    if not validate_email_password(email, password):
-        return "Invalid email format or weak password."
-    conn = sqlite3.connect('user_profiles.db')
-    c = conn.cursor()
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    try:
-        c.execute("INSERT INTO profiles (username, email, password) VALUES (?, ?, ?)",
-                  (username, email, hashed_password))
-        conn.commit()
-        return "User successfully registered."
-    except sqlite3.IntegrityError:
-        return "Username or email already exists."
-    finally:
-        conn.close()
-
-# Verify Login
-def verify_login(email, password):
-    conn = sqlite3.connect('user_profiles.db')
-    c = conn.cursor()
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    c.execute("SELECT * FROM profiles WHERE email=? AND password=?", (email, hashed_password))
-    user = c.fetchone()
-    conn.close()
-    return bool(user)
-
 # Kivy Interface
 # UserOnboarding Class
 class UserOnboarding(BoxLayout):

@@ -54,3 +54,7 @@ matplotlibrc
 
 # Additional Libraries
 # Add any other library-specific files you want to ignore
+App/Database/User_Account_Data/invalid_connection_string
+App/Database/User_Account_Data/test_db_connection_string
+App/Database/User_Account_Data/your_db_connection_string
+App/Database/User_Account_Data/your_connection_string
