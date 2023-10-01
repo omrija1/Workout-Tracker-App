@@ -55,7 +55,8 @@ class UserOnboarding(BoxLayout):
         
 # Function to login_user
     def login_user(self, instance):
-        if db_setup.verify_login(self.email.text, self.password.text):
+        conn = sqlite3.connect("database_name.db")
+        if db_setup.verify_login(self.email.text, self.password.text, conn):
             self.clear_widgets()
             self.add_widget(Label(text="Login successful.", size_hint_y=None, height=30, font_size=18))
         else:
