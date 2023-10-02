@@ -1,13 +1,11 @@
 import sqlite3
-import hashlib
-import re
-import sys
+import os
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
-from App.Database.User_Account_Data import db_setup
+from ...Database.User_Account_Data import db_setup
 
 
 # Kivy Interface
@@ -42,7 +40,9 @@ class UserOnboarding(BoxLayout):
     def register_user(self, instance):
         result = db_setup.add_user(self.username.text, self.email.text, self.password.text)
         self.clear_widgets()
-        self.add_widget(Label(text=result, size_hint_y=None, height=30, font_size=18))
+        self.add_widget(Label(text=str(result.get('message', result)), size_hint_y=None, height=30, font_size=18))
+
+
         
         # Function to show_login_form
     def show_login_form(self, instance):
@@ -55,7 +55,8 @@ class UserOnboarding(BoxLayout):
         
 # Function to login_user
     def login_user(self, instance):
-        conn = sqlite3.connect("database_name.db")
+        db_connection_string = os.environ.get('DB_CONNECTION_STRING', 'C:\\Workout-Tracker-App\\database.db')
+        conn = sqlite3.connect(db_connection_string)
         if db_setup.verify_login(self.email.text, self.password.text, conn):
             self.clear_widgets()
             self.add_widget(Label(text="Login successful.", size_hint_y=None, height=30, font_size=18))
@@ -68,7 +69,7 @@ class MyApp(App):
     
 # Function to build
     def build(self):
-        db_setup.initialize_database("database_name.db")
+        db_setup.initialize_database("database.db")
         return UserOnboarding()
 
 
