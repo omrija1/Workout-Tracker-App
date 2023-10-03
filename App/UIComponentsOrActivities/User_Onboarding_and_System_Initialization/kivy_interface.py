@@ -1,7 +1,6 @@
 # # Import required libraries for SQLite database and Kivy interface
 import sqlite3
 import os
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.app import App
 # # Import necessary Kivy modules for building the UI components
 from kivy.uix.boxlayout import BoxLayout
@@ -10,9 +9,9 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from ...Database.User_Account_Data import db_setup
 
+
+
 # # UserOnboarding Class: Manages the user onboarding process in the app
-
-
 # Kivy Interface
 # # __init__: Constructor to initialize the UserOnboarding class and its widgets
 # UserOnboarding Class
@@ -81,21 +80,12 @@ class UserOnboarding(BoxLayout):
 # MyApp Class
 class MyApp(App):
 
-    def build(self):
-        sm = MyScreenManager()
-        sm.add_widget(UserOnboardingScreen(name='onboarding'))
-        return sm
-    
 # Function to build
+    def build(self):
         db_setup.initialize_database("database.db")
         return UserOnboarding()
-
+    
 
 if __name__ == '__main__':
     MyApp().run()
 
-class UserOnboardingScreen(Screen):
-    pass
-
-class MyScreenManager(ScreenManager):
-    pass
