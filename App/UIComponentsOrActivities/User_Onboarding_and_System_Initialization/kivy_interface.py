@@ -8,6 +8,8 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from ...Database.User_Account_Data import db_setup
+from kivy.uix.screenmanager import ScreenManager, Screen
+
 # # UserOnboarding Class: Manages the user onboarding process in the app
 
 

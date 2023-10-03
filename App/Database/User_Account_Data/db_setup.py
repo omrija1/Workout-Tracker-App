@@ -66,10 +66,11 @@ def validate_email_password(email, password):
     password_strong = len(password) >= 8
     return email_valid and password_strong
 # # Validate email format using regex
+# # Validate password length (must be at least 8 characters)
 
 
 logging.basicConfig(filename='add_user.log', level=logging.DEBUG)
-# # Validate password length (must be at least 8 characters)
+# Configure global logging settings
 os.environ['DB_CONNECTION_STRING'] = 'C:\\Workout-Tracker-App\\database.db'
 
 
@@ -94,18 +95,21 @@ def add_user(username, email, password):
         if db_connection_string:
             with sqlite3.connect(db_connection_string) as conn:
                 c = conn.cursor()
-                
+                # Check if username or email already exists
                 c.execute("SELECT 1 FROM profiles WHERE username = ? OR email = ? LIMIT 1", (username, email))
                 existing_user = c.fetchone()
                 
                 if existing_user:
                     response['message'] = "Username or email already exists."
                 else:
+                    # Generate salt and hash the password
                     salt = bcrypt.gensalt()
                     hashed_password = bcrypt.hashpw(password.encode(), salt).decode()
+                    # Insert new user into 'profiles' table
                     c.execute("INSERT INTO profiles (username, email, password_hash) VALUES (?, ?, ?)",
                               (username, email, hashed_password))
                     conn.commit()
+                    # Update response to indicate success
                     response['status'] = 'success'
                     response['message'] = "User successfully registered."
                     response['is_successful'] = True
@@ -137,9 +141,10 @@ def verify_login(email, password, conn):
                 # Log the hashed_password for debugging
                 logging.debug(f"Hashed Password from DB: {hashed_password}")
 
-                # Check password
+                # Check if the hashed password matches the entered password
                 if bcrypt.checkpw(password.encode(), hashed_password.encode()):
                     return True
+    #logging
     except ValueError as e:
         logging.error(f"Invalid salt or hashed_password: {str(e)}")
         return False
@@ -148,5 +153,3 @@ def verify_login(email, password, conn):
         return False
 
     return False
-
-
