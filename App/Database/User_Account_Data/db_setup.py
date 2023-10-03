@@ -2,7 +2,6 @@
 import os
 import bcrypt
 import sqlite3
-import hashlib
 import re
 import logging
 
