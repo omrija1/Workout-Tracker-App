@@ -79,8 +79,10 @@ class RegisterScreen(Screen):
         """Register a new user."""
         result = db_setup.add_user(self.username.text, self.email.text, self.password.text)
         self.layout.clear_widgets()
-        self.layout.add_widget(Label(text=str(result.get('message', result)), size_hint_y=None, height=30, font_size=18))
-
+        if result.get('is_successful'): # Check the key for success from db_setup
+            self.manager.current = 'main_dashboard'
+        else:
+            self.layout.add_widget(Label(text=str(result.get('message', result)), size_hint_y=None, height=30, font_size=18))
 
 class LoginScreen(Screen):
     """Handles the user login screen.
@@ -104,12 +106,26 @@ class LoginScreen(Screen):
         """Handle user login."""
         db_connection_string = os.environ.get('DB_CONNECTION_STRING', 'C:\\Workout-Tracker-App\\database.db')
         conn = sqlite3.connect(db_connection_string)
-        if db_setup.verify_login(self.email.text, self.password.text, conn):
-            self.layout.clear_widgets()
-            self.layout.add_widget(Label(text="Login successful.", size_hint_y=None, height=30, font_size=18))
+        result = db_setup.verify_login(self.email.text, self.password.text, conn)  # verify_login returns a boolean
+        self.layout.clear_widgets()
+        if result:  # Check the result from db_setup
+            self.manager.current = 'main_dashboard'
         else:
-            self.layout.clear_widgets()
             self.layout.add_widget(Label(text="Invalid email or password.", size_hint_y=None, height=30, font_size=18))
+
+class MainDashboard(Screen):
+    """Handles the main dashboard screen.
+
+    Attributes:
+        layout: The main layout for this screen.
+    """
+
+    def __init__(self, **kwargs) -> None:
+        """Initialize the MainDashboard class and its widgets."""
+        super(MainDashboard, self).__init__(**kwargs)
+        self.layout = BoxLayout(orientation='vertical')
+        self.layout.add_widget(Label(text='Welcome to the Main Dashboard!', size_hint_y=None, height=30, font_size=24))
+        self.add_widget(self.layout)
 
 
 class Manager(ScreenManager):
@@ -122,6 +138,7 @@ class Manager(ScreenManager):
         self.add_widget(RegisterLogin(name='register_login'))
         self.add_widget(RegisterScreen(name='register'))
         self.add_widget(LoginScreen(name='login'))
+        self.add_widget(MainDashboard(name='main_dashboard'))
 
 
 class MyApp(App):
