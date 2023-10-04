@@ -1,89 +1,137 @@
-# # Import required libraries for SQLite database and Kivy interface
 import sqlite3
 import os
 from kivy.app import App
-# # Import necessary Kivy modules for building the UI components
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import ScreenManager, Screen
 from ...Database.User_Account_Data import db_setup
-# # UserOnboarding Class: Manages the user onboarding process in the app
-# Kivy Interface
-# # __init__: Constructor to initialize the UserOnboarding class and its widgets
-# UserOnboarding Class
-class UserOnboarding(BoxLayout):
-    def __init__(self, **kwargs):
+
+
+class UserOnboarding(Screen):
+    """Handles the initial onboarding screen.
+
+    Attributes:
+        layout: The main layout for this screen.
+    """
+
+    def __init__(self, **kwargs) -> None:
+        """Initialize the UserOnboarding class and its widgets."""
         super(UserOnboarding, self).__init__(**kwargs)
-        # # show_register_login: Clears existing widgets and shows Register/Login options
-        self.orientation = 'vertical'
-        self.add_widget(Label(text='Welcome!', size_hint_y=None, height=30, font_size=24))
-        self.add_widget(Button(text='Press to Continue', size_hint_y=None, height=50, on_press=self.show_register_login))
-        # Function to show_register_login
-    def show_register_login(self, instance):
-        self.clear_widgets()
-        # # show_register_form: Clears existing widgets and shows the user registration form
-        self.add_widget(Label(text='Choose an Option:', size_hint_y=None, height=30, font_size=18))
-        self.add_widget(Button(text='Register', size_hint_y=None, height=50, on_press=self.show_register_form))
-        self.add_widget(Button(text='Login', size_hint_y=None, height=50, on_press=self.show_login_form))
-        # Function to show_register_form
-    def show_register_form(self, instance):
-        self.clear_widgets()
+        self.layout = BoxLayout(orientation='vertical')
+        self.layout.add_widget(Label(text='Welcome!', size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(Button(text='Press to Continue', size_hint_y=None, height=50, on_press=self.show_register_login))
+        self.add_widget(self.layout)
+
+    def show_register_login(self, instance) -> None:
+        """Navigate to the register/login screen."""
+        self.manager.current = 'register_login'
+
+
+class RegisterLogin(Screen):
+    """Handles the Register or Login choice screen.
+
+    Attributes:
+        layout: The main layout for this screen.
+    """
+
+    def __init__(self, **kwargs) -> None:
+        """Initialize the RegisterLogin class and its widgets."""
+        super(RegisterLogin, self).__init__(**kwargs)
+        self.layout = BoxLayout(orientation='vertical')
+        self.layout.add_widget(Label(text='Choose an Option:', size_hint_y=None, height=30, font_size=18))
+        self.layout.add_widget(Button(text='Register', size_hint_y=None, height=50, on_press=self.show_register_form))
+        self.layout.add_widget(Button(text='Login', size_hint_y=None, height=50, on_press=self.show_login_form))
+        self.add_widget(self.layout)
+
+    def show_register_form(self, instance) -> None:
+        """Navigate to the registration screen."""
+        self.manager.current = 'register'
+
+    def show_login_form(self, instance) -> None:
+        """Navigate to the login screen."""
+        self.manager.current = 'login'
+
+
+class RegisterScreen(Screen):
+    """Handles the user registration screen.
+
+    Attributes:
+        layout: The main layout for this screen.
+    """
+
+    def __init__(self, **kwargs) -> None:
+        """Initialize the RegisterScreen class and its widgets."""
+        super(RegisterScreen, self).__init__(**kwargs)
+        self.layout = BoxLayout(orientation='vertical')
+        # Existing widgets for registration form
         self.username = TextInput(hint_text='Username', size_hint_y=None, height=30)
         self.email = TextInput(hint_text='Email', size_hint_y=None, height=30)
-        # # register_user: Handles the registration of a new user using the details from the form
         self.password = TextInput(hint_text='Password', password=True, size_hint_y=None, height=30)
-        self.add_widget(self.username)
-        self.add_widget(self.email)
-        self.add_widget(self.password)
-        self.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.register_user))
- # Function to register_user
-# # show_login_form: Clears existing widgets and shows the user login form
-    def register_user(self, instance):
+        self.layout.add_widget(self.username)
+        self.layout.add_widget(self.email)
+        self.layout.add_widget(self.password)
+        self.layout.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.register_user))
+        self.add_widget(self.layout)
+
+    def register_user(self, instance) -> None:
+        """Register a new user."""
         result = db_setup.add_user(self.username.text, self.email.text, self.password.text)
-        self.clear_widgets()
-        self.add_widget(Label(text=str(result.get('message', result)), size_hint_y=None, height=30, font_size=18))
-# Function to show_login_form
-# # login_user: Handles the login process using the details from the form
-    def show_login_form(self, instance):
-        self.clear_widgets()
+        self.layout.clear_widgets()
+        self.layout.add_widget(Label(text=str(result.get('message', result)), size_hint_y=None, height=30, font_size=18))
+
+
+class LoginScreen(Screen):
+    """Handles the user login screen.
+
+    Attributes:
+        layout: The main layout for this screen.
+    """
+
+    def __init__(self, **kwargs) -> None:
+        """Initialize the LoginScreen class and its widgets."""
+        super(LoginScreen, self).__init__(**kwargs)
+        self.layout = BoxLayout(orientation='vertical')
         self.email = TextInput(hint_text='Email', size_hint_y=None, height=30)
         self.password = TextInput(hint_text='Password', password=True, size_hint_y=None, height=30)
-        self.add_widget(self.email)
-        self.add_widget(self.password)
-        self.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.login_user))
-# # MyApp Class: The main application class
-# Function to login_user
-    def login_user(self, instance):
+        self.layout.add_widget(self.email)
+        self.layout.add_widget(self.password)
+        self.layout.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.login_user))
+        self.add_widget(self.layout)
+
+    def login_user(self, instance) -> None:
+        """Handle user login."""
         db_connection_string = os.environ.get('DB_CONNECTION_STRING', 'C:\\Workout-Tracker-App\\database.db')
-# # build: Builds the application interface using Kivy
         conn = sqlite3.connect(db_connection_string)
         if db_setup.verify_login(self.email.text, self.password.text, conn):
-            self.clear_widgets()
-            self.add_widget(Label(text="Login successful.", size_hint_y=None, height=30, font_size=18))
+            self.layout.clear_widgets()
+            self.layout.add_widget(Label(text="Login successful.", size_hint_y=None, height=30, font_size=18))
         else:
-# # Entry point: The main function that runs the Kivy application
-            self.clear_widgets()
-            self.add_widget(Label(text="Invalid email or password.", size_hint_y=None, height=30, font_size=18))
+            self.layout.clear_widgets()
+            self.layout.add_widget(Label(text="Invalid email or password.", size_hint_y=None, height=30, font_size=18))
 
-# Screen Manager Configuration
+
 class Manager(ScreenManager):
-    pass
+    """Manages all the screens and transitions."""
 
-class WelcomeScreen(Screen):
-    def __init__(self, **kwargs):
-        super(WelcomeScreen, self).__init__(**kwargs)
-        self.add_widget(UserOnboarding())
+    def __init__(self, **kwargs) -> None:
+        """Initialize the screen manager."""
+        super(Manager, self).__init__(**kwargs)
+        self.add_widget(UserOnboarding(name='onboarding'))
+        self.add_widget(RegisterLogin(name='register_login'))
+        self.add_widget(RegisterScreen(name='register'))
+        self.add_widget(LoginScreen(name='login'))
 
-# Main App Class
+
 class MyApp(App):
-# Function to build
-    def build(self):
+    """The main application class."""
+
+    def build(self) -> Manager:
+        """Builds the application interface."""
         db_setup.initialize_database("database.db")
-        sm = Manager()
-        sm.add_widget(WelcomeScreen(name='welcome'))
-        return sm
+        return Manager()
+
 
 if __name__ == '__main__':
     MyApp().run()
