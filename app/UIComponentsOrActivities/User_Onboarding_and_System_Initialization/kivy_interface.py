@@ -182,6 +182,7 @@ class RegisterScreen(BaseScreen):
             # Exception handling for database interactions
             result = db_setup.add_user(self.username.text, self.email.text, self.password.text)
             if result.get('is_successful'):
+                self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
             else:
                 self.display_message(result.get('message', 'An unknown error occurred.'))
@@ -257,6 +258,7 @@ class LoginScreen(BaseScreen):
             conn = sqlite3.connect(db_connection_string)
             result = db_setup.verify_login(self.email.text, self.password.text, conn)
             if result:
+                self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
             else:
                 self.display_message("Invalid email or password.")
@@ -338,6 +340,7 @@ class Manager(ScreenManager):
         """
         super(Manager, self).__init__(**kwargs)
         self.screen_stack = []  # Stack to keep track of screen navigation
+        self.is_authenticated = False  # Flag to check if the user is authenticated
         self.init_screens()
 
     def init_screens(self):
@@ -357,13 +360,24 @@ class Manager(ScreenManager):
             self.screen_stack.pop()
         self.current = screen_name
 
-    def go_back(self, *args):
-        if self.screen_stack:
-            self.screen_stack.pop()  # Remove current screen
+    def go_back(self, window, key, *args):
+        if key == 27:  # The escape key corresponds to the Android back button
             if self.screen_stack:
-                # Go back to the previous screen
-                self.current = self.screen_stack[-1]
-                self.screen_stack.pop()  # Remove it as manage_screens will add it again
+                self.screen_stack.pop()
+                if self.screen_stack:
+                    next_screen = self.screen_stack[-1]
+                    if self.is_authenticated and next_screen in ['login', 'register']:
+                        return True  # Block going back to login or register if authenticated
+                    self.current = next_screen
+                    self.screen_stack.pop()
+                else:
+                    self.current = 'main_dashboard'  # Navigate to main dashboard if stack is empty
+                    self.screen_stack.append('main_dashboard')  # Add main dashboard to stack
+            else:
+                self.current = 'main_dashboard'  # Navigate to main dashboard if stack is empty
+                self.screen_stack.append('main_dashboard')  # Add main dashboard to stack
+            return True
+        return False
 
 class MyApp(App):
     """
