@@ -5,7 +5,8 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import ScreenManager, Screen
-
+from kivy.core.window import Window
+from kivy.logger import Logger
 # Import statements for other dependencies
 from ...Database.User_Account_Data import db_setup  # Assuming this is the correct import path
 import os
@@ -73,7 +74,7 @@ class UserOnboarding(BaseScreen):
         Args:
             instance (Button): The button instance that triggered this method.
         """
-        self.manager.current = 'register_login'
+        self.manager.manage_screens('register_login', 'add')
 class RegisterLogin(BaseScreen):
     """
     Screen for choosing between registration and login.
@@ -107,7 +108,7 @@ class RegisterLogin(BaseScreen):
         Args:
             instance (Button): The button instance that triggered this method.
         """
-        self.manager.current = 'register'
+        self.manager.manage_screens('register', 'add')
 
     def show_login_form(self, instance):
         """
@@ -116,7 +117,7 @@ class RegisterLogin(BaseScreen):
         Args:
             instance (Button): The button instance that triggered this method.
         """
-        self.manager.current = 'login'
+        self.manager.manage_screens('login', 'add')
 class RegisterScreen(BaseScreen):
     """
     Screen for user registration.
@@ -176,7 +177,7 @@ class RegisterScreen(BaseScreen):
             # Exception handling for database interactions
             result = db_setup.add_user(self.username.text, self.email.text, self.password.text)
             if result.get('is_successful'):
-                self.manager.current = 'main_dashboard'
+                self.manager.manage_screens('main_dashboard', 'add')
             else:
                 self.display_message(result.get('message', 'An unknown error occurred.'))
         except Exception as e:
@@ -251,7 +252,7 @@ class LoginScreen(BaseScreen):
             conn = sqlite3.connect(db_connection_string)
             result = db_setup.verify_login(self.email.text, self.password.text, conn)
             if result:
-                self.manager.current = 'main_dashboard'
+                self.manager.manage_screens('main_dashboard', 'add')
             else:
                 self.display_message("Invalid email or password.")
         except Exception as e:
@@ -300,7 +301,7 @@ class MainDashboard(BaseScreen):
             screen_name (str): The name of the screen to navigate to.
         """
         def inner_function(instance):
-            self.manager.current = screen_name
+            self.manager.manage_screens(screen_name, 'add')
         return inner_function
 
 # New Screen1 and Screen2 classes
@@ -330,6 +331,7 @@ class Manager(ScreenManager):
             **kwargs: Additional keyword arguments.
         """
         super(Manager, self).__init__(**kwargs)
+        self.screen_stack = []  # Stack to keep track of screen navigation
         self.init_screens()
 
     def init_screens(self):
@@ -341,6 +343,22 @@ class Manager(ScreenManager):
         self.add_widget(MainDashboard(name='main_dashboard'))
         self.add_widget(Screen1(name='screen_1'))
         self.add_widget(Screen2(name='screen_2'))
+        
+    def manage_screens(self, screen_name, operation):
+        if operation == 'add':
+            self.screen_stack.append(screen_name)
+        elif operation == 'remove' and self.screen_stack:
+            self.screen_stack.pop()
+        self.current = screen_name
+
+    def go_back(self, *args):
+        if self.screen_stack:
+            self.screen_stack.pop()  # Remove current screen
+            if self.screen_stack:
+                # Go back to the previous screen
+                self.current = self.screen_stack[-1]
+                self.screen_stack.pop()  # Remove it as manage_screens will add it again
+
 class MyApp(App):
     """
     Main application class.
@@ -358,6 +376,10 @@ class MyApp(App):
         """
         # Initialize the database
         db_setup.initialize_database("database.db")
+        sm = Manager()
+        Window.bind(on_keyboard=sm.go_back) # bind back button
+        sm.current = 'onboarding' # set the first screen
+        sm.manage_screens('onboarding', 'add')
         return Manager()
 
 # Main function to run the application

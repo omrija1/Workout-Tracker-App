@@ -1,5 +1,22 @@
 
-Sequence Diagram for Use Case 4: Dynamic Reminders and Notifications
+Sequence Diagram Dynamic Reminders and Notifications
+
+States:
+1. Initial State
+2. Authenticated State
+3. Navigating to Reminder Screen
+4. Displaying Reminders
+5. Adding/Editing Reminder
+6. Filling Reminder Form
+7. Saving Reminder
+8. Scheduling Notification
+9. Receiving Notification
+10. Acknowledging Notification
+11. Logging Notification
+12. Deleting Reminder
+13. Confirming Deletion
+14. Error State (Validation or Deletion error)
+
 
 1. User -> System: OpenApp()
     - Condition: If the user is authenticated, proceed to step 2. Otherwise, redirect to login.

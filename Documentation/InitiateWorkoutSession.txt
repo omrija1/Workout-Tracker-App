@@ -1,0 +1,23 @@
+Actors:
+User And System
+
+Preconditions
+User is authenticated.
+User has at least one workout session created.
+
+
+Primary Flow
+User navigates to the "Main Dashboard" screen 0.
+User selects the workout session they want to initiate.
+System loads the selected workout details.
+User clicks the "Start Workout" button.
+System initializes the workout session, setting timers and cues based on the workout details.
+
+Exception Flows
+If the selected workout session fails to load, the system displays an error message.
+
+User Story: As a user, I want to easily initiate a planned workout session so that I can start exercising without any delays or manual setup.
+
+The selected workout's details should be displayed.
+On clicking "Start Workout," the system should set all necessary timers and cues.
+In case of any errors, appropriate messages should be displayed

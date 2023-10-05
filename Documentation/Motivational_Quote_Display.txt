@@ -1,5 +1,5 @@
 
-Use Case 10: Motivational Quote Display
+Motivational Quote Display
 Actors: User, System, Database
 
 1. User -> System: OpenApp()
@@ -24,3 +24,13 @@ Actors: User, System, Database
 - If Database fails to fetch the last quote timestamp, a default quote is shown.
 - If Database fails to save the new quote, an error is logged but the flow continues.
 - If API fails to return a new quote, a default quote is used.
+
+
+Primary Flow:
+User opens the app.
+System displays a motivational quote.
+Quote changes every 24 hours.
+Postconditions: User is greeted with a motivational quote upon app opening.
+
+
+Motivational Quote: As a user, I want to see a different motivational quote each day when I open the app, to start my fitness journey on a positive note.

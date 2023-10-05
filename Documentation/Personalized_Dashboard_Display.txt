@@ -1,0 +1,52 @@
+
+State Diagram Personalized Dashboard Display (Advanced Performance and Weight Tracking) Screen 1
+
+States:
+1. Fetching User Data
+2. Fetching Performance Metrics (related to 1)
+3. Fetching Weight History (related to 1)
+4. Displaying Dashboard
+5. displaying Performance Metrics and weight
+7. Error State (Database fetch error)
+Recalculating new data by fetching it from database and displaying it here
+
+Transitions and Conditions:
+1. OpenApp(): Initial State -> Fetching User Data
+   - Condition: User must be authenticated
+2. FetchUserData() & ReturnUserData(): -> Fetching Recent Performance Metrics
+3. FetchRecentPerformanceMetrics()(FROM DATABASE) & ReturnRecentPerformanceMetrics() (TO DISPLAY):
+-> Fetching Weight History
+4. FetchWeightHistory() From Database!! & ReturnWeightHistory() TO DISPLAY:
+ -> Displaying Dashboard
+
+Actions (Optional):
+- Display an error message: If Database fails to fetch any data
+
+
+Sequence Diagram Personalized Dashboard Display
+
+1. User -> System: OpenApp()
+    Condition: User must be authenticated.
+
+2. System -> Database: FetchUserData(userID)
+    Database -> System: ReturnUserData()
+
+3. System -> Database: FetchRecentPerformanceMetrics(userID)
+    Database -> System: ReturnRecentPerformanceMetrics()
+
+4. System -> Database: FetchWeightHistory(userID)
+    Database -> System: ReturnWeightHistory()
+
+5. System -> User: DisplayDashboard(userData, recentPerformanceMetrics, weightHistory)
+
+    Error Handling:
+    - If Database fails to fetch any data, an error message is displayed to the user.
+
+6. User -> System: NavigateToOtherSections()
+    Condition: User can navigate to other sections of the app from the dashboard.
+
+7. System -> User: RedirectToSelectedSection()
+
+Postconditions: 
+- User receives an at-a-glance understanding of their fitness status and next steps.
+- User can navigate to other sections of the application.

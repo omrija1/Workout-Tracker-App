@@ -1,12 +1,13 @@
 
-State Diagram for Use Case 8: User-Centric Exercise Library for Custom Workouts
+State Diagram User-Centric Exercise Library for Custom Workouts screen 0
 
 States:
-1. Initial State (Authenticated)
-2. Displaying Dashboard
-3. Navigating to Exercise Library
+2. Displaying Dashboard (main dashboard screen 0)
+3. clicking on the Exercise Library button
 4. Displaying Exercise Library
-5. Creating or Choosing Exercise
+5. Creating (using Use Case 2, workout creation) or Choosing Exercise (not from workout history which will be in main dahsboard, but from excerises he created in the library which later they were imported to main dashboard
+excerices created in library can be edited and deleted then imported to main dashbaord after confirmation, he can duplicate excerises only in main dashboard, not inside library and and library wont contain history of his workouts
+only excerises he created
 6. Filling Exercise Form
 7. Saving or Updating Exercise
 8. Displaying Save or Update Result
@@ -30,4 +31,7 @@ Transitions and Conditions:
 11. RedirectBackToDashboard(): Displaying Workout Update Result -> Redirecting Back to Dashboard
 
 Actions (Optional):
-- Display an error message: If any database operation fails or if validation fails
+- Display an error message: If any database operation fails or if validation fails.
+
+Exercises make up workout session 
+

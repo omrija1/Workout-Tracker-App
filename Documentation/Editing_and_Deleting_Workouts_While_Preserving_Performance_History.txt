@@ -1,5 +1,19 @@
 
-Sequence Diagram for Use Case 7: Editing and Deleting Workouts While Preserving Performance History
+Sequence Diagram Editing and Deleting Workouts While Preserving Performance History screen 0 maindashoabrd
+(INSIDE User-Centric Exercise Library)
+
+
+States:
+1. Initial State (Authenticated and Dashboard displayed)
+2. Navigating to Workout History
+3. Fetching Workout History
+4. Displaying Workout History
+5. Selecting Workout to Edit or Delete
+6. Confirming Edit or Delete
+7. Editing or Deleting Workout
+8. Displaying Success Message
+9. Error State (Unable to fetch, edit, or delete)
+
 
 1. User -> System: OpenApp()
     Condition: User is authenticated and on the main dashboard.
@@ -39,3 +53,9 @@ Sequence Diagram for Use Case 7: Editing and Deleting Workouts While Preserving 
 Postconditions: 
     - If 'Edit', the user is redirected to the workout editing screen.
     - If 'Delete', the workout is deleted from the dashboard but remains in the performance history chart.
+
+note: if user delete workout or edit workout that he haven't submitted for completetion, we preserve Performance History
+if user delete workout that he have submitted for completetion, we preserve Performance History
+if user edit workout that he have subbmited for completetion, we preserve and recalculate Performance History
+completetion = when user does his workout session and click, done i did it. so it gets sent to our database for calculations
+simply creating workouts doesnt reflect or affect the performance history, only subbmited ones 

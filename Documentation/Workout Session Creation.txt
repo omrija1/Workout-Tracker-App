@@ -1,0 +1,32 @@
+
+(Inisde library of custom workouts)
+State Diagram for Use Case 2: Comprehensive Workout Session Creation
+
+States:
+- start (click plus button to create workouts)
+- Select Workout Day (schueldue not just days)
+- Create Exercise
+- SelectMuscleGroups([Must input]main_muscle, [optinal input]secondary_muscles)
+- Log Sets and Reps/time (SaveSetsRepsTimeWeight(sets, reps/time, weight))
+- Select Training Method (Normal Sets, Drop Sets, Super Set, Negatives)
+- Log Rest Time 
+- Save and Continue
+- End
+
+Transitions:
+- Start -> Select Workout Creation: OpenApp()
+- Select Workout Creation-> Create Exercise: ChooseDay() [in calnder]
+- Create Exercise -> log main muscle and secondary muscle ()
+- logged muscles -> Log Sets, rep/time, Weight ()
+- Log Sets, rep/time, Weight -> Select Training Method: InputSetsRepsTimeWeight()
+- Select Training Method (Normal Sets, Drop Sets, Super Set, Negatives)-> Log Rest Time
+- Log Rest Time -> Save and Continue
+- Save and Continue -> Create Exercise: SaveAndAddAnotherExercise()
+- Save and Continue -> End: SaveAndFinish()
+
+Error Handling:
+- Any State -> Start: If error occurs, display error message and return to start
+
+Conditions:
+- User must complete each state to move to the next, except in the case of an error.
+- User can choose to add another exercise after saving, which loops back to Select/Create Exercise state.

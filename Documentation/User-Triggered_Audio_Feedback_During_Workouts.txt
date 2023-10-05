@@ -1,5 +1,5 @@
 
-Use Case 9: User-Triggered Audio Feedback During Workouts
+User-Triggered Audio Feedback During Workouts
 
 Actors: User, System
 
@@ -26,4 +26,14 @@ Error Handling Flows:
 - If the timer fails to start, an error message is displayed.
 - If the audio cue fails to play, an error message is displayed.
 
+
+
+Primary Flow:
+User starts a workout session within the app.
+After completing a set, the user interacts with the app to indicate that the set is finished.
+A timer for the rest period starts in the app.
+When the rest period ends, the system provides an audio cue to alert the user that it's time to start the next set.
+Exception Flows: If the app fails to provide an audio cue, an error message is displayed.
 Postconditions: The user receives audio cues at the end of each rest period, helping them to accurately time their sets.
+
+Audio Cues for Timed Rest: As a user, I want the app to give me an audio cue when my rest period has ended, allowing me to focus on my workout without constantly checking the timer.

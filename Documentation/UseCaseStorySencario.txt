@@ -20,34 +20,41 @@ Plyer: For access to features like notifications and reminders on Android device
 Debugging & Development Tools: Pylint and Flake8
 
 
-Use Cases
-Each use case will now include 'Exception Flows' and 'Postconditions' to provide more depth.
-Use Case 1: User Onboarding and System Initialization
+
+Each use case will now include 'Exception Flows' and 'Postconditions' and 'Primary Flow' to provide more depth.
+
+
+User Onboarding and System Initialization
 Exception Flows: If validation fails, the user is prompted to correct the information.
 Postconditions: User account is created, and the user is directed to the main dashboard.
-Use Case 2: Comprehensive Workout Session Creation
+
+
+Comprehensive Workout Session Creation
 Exception Flows: If an exercise or set is incorrectly defined, a validation message appears.
 Postconditions: A new workout session is created and saved, ready for future reference or execution.
-Use Case 3: Advanced Performance and Weight Tracking
-Exception Flows: If data is inconsistent or missing, the system prompts for correct input.
-Postconditions: Performance metrics and weight history are updated and visualized.
-Use Case 4: Dynamic Reminders and Notifications
+
+
+
+Dynamic Reminders and Notifications
 Exception Flows: If the user attempts to set conflicting reminders, a warning is issued.
 Postconditions: Reminders are set and will trigger notifications at the specified times.
-Use Case 5: Workout History and Duplication
+
+
+Workout History and Duplication
 Exception Flows: If system fails to duplicate a workout, an error message is displayed.
 Postconditions: A duplicated workout session is created, separate from the original, and available for editing.
 
-
-Use Case 6: Personalized Dashboard Display
+Personalized Dashboard Display
 Actors: User, System
 Preconditions: User is authenticated
 Primary Flow:
-User accesses the main dashboard.
-System displays an overview of upcoming workouts, recent performance metrics, and weight history.
-Postconditions: User receives an at-a-glance understanding of their fitness status and next steps.
+User accesses the Second dashboard.
+Exception Flows: If data is inconsistent or missing, the system prompts for correct input.
+System displays: recent performance metrics, and weight history.
+Postconditions: User receives an at-a-glance understanding of their fitness status and next steps, Performance metrics and weight history are updated and visualized
 
-Use Case 7: Editing and Deleting Workouts While Preserving Performance History
+
+Editing and Deleting Workouts While Preserving Performance History
 Actors: User, System
 Preconditions: User is authenticated and has previously logged workouts.
 Primary Flow:
@@ -59,7 +66,8 @@ System processes the request and updates the dashboard database but leaves the p
 Exception Flows: If the system fails to process the edit or delete request, an error message is displayed.
 Postconditions: The specified workout is either edited or removed from the user's workout history dashboard, but the original data remains intact in the performance history chart.
 
-Use Case 8: User-Centric Exercise Library for Custom Workouts
+
+User-Centric Exercise Library for Custom Workouts
 Actors: User, System
 Preconditions: User is authenticated.
 Primary Flow:
@@ -71,7 +79,7 @@ Exception Flows: If the system fails to save a newly created custom exercise, an
 Postconditions: Selected exercises are added to the current workout session. Any new custom exercises are saved to the user's personal library for future use.
 
 
-Use Case 9: User-Triggered Audio Feedback During Workouts
+User-Triggered Audio Feedback During Workouts
 Actors: User, System
 Preconditions: User is authenticated and has initiated a workout session.
 Primary Flow:
@@ -82,7 +90,8 @@ When the rest period ends, the system provides an audio cue to alert the user th
 Exception Flows: If the app fails to provide an audio cue, an error message is displayed.
 Postconditions: The user receives audio cues at the end of each rest period, helping them to accurately time their sets.
 
-Use Case 10: Motivational Quote Display
+
+Motivational Quote Display
 Actors: User, System
 Preconditions: User is authenticated.
 Primary Flow:
@@ -91,7 +100,7 @@ System displays a motivational quote.
 Quote changes every 24 hours.
 Postconditions: User is greeted with a motivational quote upon app opening.
 
-Use Case 11: User Profile and Settings
+User Profile and Settings
 Actors: User, System
 Preconditions: User is authenticated.
 Primary Flow:

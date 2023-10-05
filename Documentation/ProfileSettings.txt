@@ -1,0 +1,30 @@
+
+User Profile and Settings
+
+States:
+1. navigating to screen 2
+2. Fetching User Profile
+3. Displaying Profile Form
+4. Editing Profile Details
+5. Updating User Profile
+6. Displaying Update Result
+7. Error State (Database error)
+
+Transitions and Conditions:
+1. NavigateToSettings(): Displaying Dashboard -> Navigating to Settings
+2. FetchUserProfile(): Navigating to Settings -> Fetching User Profile
+3. DisplayProfileForm(profile_data): Fetching User Profile -> Displaying Profile Form
+4. EditProfileDetails(new_details): Displaying Profile Form -> Editing Profile Details
+5. UpdateUserProfile(new_details): Editing Profile Details -> Updating User Profile
+6. UpdateResult(): Updating User Profile -> Displaying Update Result
+
+Actions (Optional):
+- Display an error message: If any database operation fails
+
+Primary Flow:
+User navigates to the settings or profile section.
+User can update age, height, weight, and gender.
+System saves the changes.
+Postconditions: User's profile information is updated.
+
+Profile Customization: As a user, I want to be able to update my age, height, weight, and gender in my profile, so that the app can provide more personalized recommendations and tracking.

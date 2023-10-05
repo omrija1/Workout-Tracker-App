@@ -1,0 +1,53 @@
+
+State Diagram Workout History and Duplication  (Screen 0) main dashboard
+
+States:
+1. Fetching Workout History
+3. Displaying No History Message
+4. Displaying Workout History
+5. Confirming Duplication
+6. Duplicating Workout
+7. Displaying Duplication Success
+8. Error State (Duplication Failed)
+
+Transitions and Conditions:
+1. Dashboard Main Screen 0-> Fetching Workout History
+2. NoHistoryFound() & DisplayNoHistoryMessage(): Fetching Workout History -> Displaying No History Message
+3. ReturnWorkoutHistory(): Fetching Workout History -> Displaying Workout History
+4. SelectWorkoutToDuplicate(workoutID): Displaying Workout History -> Confirming Duplication
+5. Confirm(): Confirming Duplication -> Duplicating Workout
+6. DuplicationSuccess(newWorkoutID): Duplicating Workout -> Displaying Duplication Success
+   - Condition: If duplication fails, go to Error State
+
+note: should be available for edting, but other file (use case) is where editing and deleting with more info
+main goal is jsut to make it avaliabe for editing or putting placeholder so next guy or u who start with other file
+can pick up from here and countiune creating the complex editing and deleting workotus 
+
+Actions (Optional):
+- DisplayDuplicationFailedMessage(): If duplication fails
+
+
+Sqeuence Diagram
+1. User -> System: Main Dashbaord()
+2. System -> Database: FetchWorkoutHistory(UserID)
+   Condition: If no workout history is available, go to step 2A. Otherwise, continue to step 3.
+   2A. Database -> System: NoHistoryFound()
+   2B. System -> User: DisplayNoHistoryMessage()
+3. Database -> System: ReturnWorkoutHistory()
+4. System -> User: DisplayWorkoutHistory(workoutHistory)
+5. User -> System: SelectWorkoutToDuplicate(workoutID)
+6. System -> User: ConfirmDuplication()
+7. User -> System: Confirm()
+8. System -> Database: DuplicateWorkout(workoutID)
+   Condition: If duplication fails, go to step 8A. Otherwise, continue to step 9.
+   8A. Database -> System: DuplicationFailed()
+   8B. System -> User: DisplayDuplicationFailedMessage()
+9. Database -> System: DuplicationSuccess(newWorkoutID)
+10. System -> User: DisplayDuplicationSuccessMessage()
+
+part of the note explaination up there 
+11. User -> System: NavigateToEditWorkout(newWorkoutID)
+12. System -> User: DisplayWorkoutEditor(newWorkoutID)
+
+Postconditions: A duplicated workout session is created, separate from the original, and available for editing.
+
