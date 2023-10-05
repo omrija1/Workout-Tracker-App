@@ -11,6 +11,11 @@ from kivy.logger import Logger
 from ...Database.User_Account_Data import db_setup  # Assuming this is the correct import path
 import os
 import sqlite3
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
+
 
 class BaseScreen(Screen):
     """
@@ -290,8 +295,9 @@ class MainDashboard(BaseScreen):
     def init_ui(self):
         """Initialize the UI elements for the main dashboard."""
         self.add_widget_to_layout(Label(text='Welcome to the Main Dashboard!', size_hint_y=None, height=30, font_size=24))
-        self.add_widget_to_layout(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=self.navigate_to_screen('screen_1')))
-        self.add_widget_to_layout(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=self.navigate_to_screen('screen_2')))
+        self.add_widget_to_layout(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=lambda instance: self.navigate_to_screen('screen_1')(instance)))
+        self.add_widget_to_layout(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=lambda instance: self.navigate_to_screen('screen_2')(instance)))
+
 
     def navigate_to_screen(self, screen_name):
         """
@@ -380,7 +386,7 @@ class MyApp(App):
         Window.bind(on_keyboard=sm.go_back) # bind back button
         sm.current = 'onboarding' # set the first screen
         sm.manage_screens('onboarding', 'add')
-        return Manager()
+        return sm
 
 # Main function to run the application
 if __name__ == '__main__':

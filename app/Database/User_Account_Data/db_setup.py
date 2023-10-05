@@ -4,10 +4,15 @@ import bcrypt
 import sqlite3
 import re
 import logging
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 # # Configure basic logging settings for database initialization
-
 logging.basicConfig(filename='database_initialization.log', level=logging.DEBUG)
+
+
 # # Function to initialize the SQLite database
 def initialize_database(database: str) -> None:
     try:
@@ -15,7 +20,7 @@ def initialize_database(database: str) -> None:
         logging.debug('Starting database initialization.')
         
 # # Retrieve or set the default database connection string
-        db_connection_string = os.environ.get('DB_CONNECTION_STRING', 'C:\\Workout-Tracker-App\\' + database)
+        db_connection_string = os.environ.get('DB_CONNECTION_STRING', f'C:\\Workout-Tracker-App\\{database}')
         
         # Connect to the SQLite database
         logging.debug('Connecting to SQLite database.')
@@ -68,7 +73,7 @@ def validate_email_password(email, password):
 # # Validate password length (must be at least 8 characters)
 
 
-logging.basicConfig(filename='add_user.log', level=logging.DEBUG)
+
 # Configure global logging settings
 os.environ['DB_CONNECTION_STRING'] = 'C:\\Workout-Tracker-App\\database.db'
 
@@ -122,7 +127,7 @@ def add_user(username, email, password):
 
 
 
-logging.basicConfig(filename='verify_login.log', level=logging.DEBUG)
+
 # Function to verify_login
 def verify_login(email, password, conn):
     """
