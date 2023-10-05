@@ -45,7 +45,7 @@ class BaseScreen(Screen):
         Add a widget to the existing layout.
         
         Args:
-            widget (Widget): The Kivy widget to add.
+            widget (Widget): The Kivy widget to add..
         """
         self.layout.add_widget(widget)
 class UserOnboarding(BaseScreen):
