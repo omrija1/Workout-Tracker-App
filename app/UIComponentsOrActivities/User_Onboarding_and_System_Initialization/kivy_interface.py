@@ -272,9 +272,10 @@ class LoginScreen(BaseScreen):
 
                 self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
-                self.displayPop("Login Successful", "Welcome to the Main Dashboard")
+                self.displayPop(pop_title="Login Successful", pop_label_text="Welcome to the Main Dashboard")
             else:
                 self.display_message("Invalid email or password.")
+                self.displayPop(pop_title="Login Failed",pop_label_text="Incorrect email or password")
         except Exception as e:
             self.display_message(f"An error occurred: {e}")
 
