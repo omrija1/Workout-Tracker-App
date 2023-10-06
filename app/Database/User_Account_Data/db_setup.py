@@ -1,4 +1,4 @@
-# # Import required libraries for various functionalities such as OS, encryption, database, and logging
+# Import required libraries for various functionalities such as OS, encryption, database, and logging
 import os
 import bcrypt
 import sqlite3
@@ -9,26 +9,26 @@ from dotenv import load_dotenv
 # Load environment variables from the .env file
 load_dotenv()
 
-# # Configure basic logging settings for database initialization
+# Configure basic logging settings for database initialization
 logging.basicConfig(filename='database_initialization.log', level=logging.DEBUG)
 
 
-# # Function to initialize the SQLite database
+# Function to initialize the SQLite database
 def initialize_database(database: str) -> None:
     try:
-# # Log the beginning of the database initialization process
+# Log the beginning of the database initialization process
         logging.debug('Starting database initialization.')
         
-# # Retrieve or set the default database connection string
+# Retrieve or set the default database connection string
         db_connection_string = os.environ.get('DB_CONNECTION_STRING', f'C:\\Workout-Tracker-App\\{database}')
         
         # Connect to the SQLite database
         logging.debug('Connecting to SQLite database.')
-# # Connect to the SQLite database
+# Connect to the SQLite database
         with sqlite3.connect(db_connection_string) as conn:
             
             # Create the profiles table if it doesn't exist
-# # Create the 'profiles' table if it doesn't already exist
+# Create the 'profiles' table if it doesn't already exist
             logging.debug('Creating profiles table if it does not exist.')
             conn.execute('''
                 CREATE TABLE IF NOT EXISTS profiles (
@@ -38,26 +38,27 @@ def initialize_database(database: str) -> None:
                 )
             ''')
             
-# # Enable SQLite PRAGMAs for secure delete and foreign key constraints
+# Enable SQLite PRAGMAs for secure delete and foreign key constraints
             # Enable secure delete and foreign key constraints
             logging.debug('Setting PRAGMAs.')
             conn.execute("PRAGMA secure_delete = ON")
             conn.execute("PRAGMA foreign_keys = ON")
-# # Commit changes to the SQLite database
+# Commit changes to the SQLite database
             
             # Commit the changes to the database
             logging.debug('Committing changes to the database.')
-# # Log the completion of database initialization
+# Log the completion of database initialization
             conn.commit()
         
         logging.debug('Database initialization complete.')
-# # Log and handle any SQLite errors during initialization
+# Log and handle any SQLite errors during initialization
         
     except sqlite3.Error as e:
         logging.error("Error initializing database: %s", str(e))
+        raise
     
     
-# # Function to validate email and password based on predefined rules
+# Function to validate email and password based on predefined rules
 # Function to validate_email_password
 def validate_email_password(email, password):
     """
@@ -69,8 +70,8 @@ def validate_email_password(email, password):
     
     password_strong = len(password) >= 8
     return email_valid and password_strong
-# # Validate email format using regex
-# # Validate password length (must be at least 8 characters)
+# Validate email format using regex
+# Validate password length (must be at least 8 characters)
 
 
 
@@ -79,18 +80,18 @@ os.environ['DB_CONNECTION_STRING'] = 'C:\\Workout-Tracker-App\\database.db'
 
 
 # Function to add user
-# # Configure logging settings for adding a user
+# Configure logging settings for adding a user
 def add_user(username, email, password):
     db_connection_string = os.environ.get('DB_CONNECTION_STRING', 'C:\\Workout-Tracker-App\\database.db')
     logging.debug('Starting add_user function.')
-# # Function to add a new user to the 'profiles' table in the database
+# Function to add a new user to the 'profiles' table in the database
     response = {'status': 'error', 'message': '', 'is_successful': False}
     if len(username) > 12 or len(email) > 50:
         response['message'] = "Username or email too long."
         return response
     
     if not validate_email_password(email, password):
-# # Function to verify login credentials against the database
+# Function to verify login credentials against the database
         response['message'] = "Invalid email format or weak password."
         return response
     
