@@ -5,6 +5,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from kivy.logger import Logger
 # Import statements for other dependencies
@@ -48,6 +49,25 @@ class BaseScreen(Screen):
             widget (Widget): The Kivy widget to add..
         """
         self.layout.add_widget(widget)
+
+    def displayPop(self, pop_title,pop_label_text):
+        """
+        Displays a popup to the active screen
+
+        Args:
+            pop_title: Title for Popup window
+            pop_label_text: Text for Label inside Popup window
+
+        """
+
+        # Create Popup
+        pop = Popup(title=pop_title,
+                    content=Label(text=pop_label_text),
+                    size_hint=(None,None), size=(400, 400))
+
+        # Display Popup window to screen
+        pop.open()
+
 class UserOnboarding(BaseScreen):
     """
     Screen for user onboarding.
@@ -259,10 +279,13 @@ class LoginScreen(BaseScreen):
             conn = sqlite3.connect(db_connection_string)
             result = auth_manager.verify_login(self.email.text, self.password.text, conn)  # Use verify_login method
             if result:
+
                 self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
+                self.displayPop(pop_title="Login Successful", pop_label_text="Welcome to the Main Dashboard")
             else:
                 self.display_message("Invalid email or password.")
+                self.displayPop(pop_title="Login Failed",pop_label_text="Incorrect email or password")
         except Exception as e:
             self.display_message(f"An error occurred: {e}")
 
