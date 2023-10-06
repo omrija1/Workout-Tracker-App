@@ -8,7 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 from kivy.logger import Logger
 # Import statements for other dependencies
-from ...Database.User_Account_Data import db_setup  # Assuming this is the correct import path
+from db_setup import DatabaseManager, UserManager, AuthenticationManager  
 import os
 import sqlite3
 from dotenv import load_dotenv
@@ -180,7 +180,8 @@ class RegisterScreen(BaseScreen):
         """
         try:
             # Exception handling for database interactions
-            result = db_setup.add_user(self.username.text, self.email.text, self.password.text)
+            user_manager = UserManager('database.db')  # Initialize UserManager
+            result = user_manager.add_user(self.username.text, self.email.text, self.password.text)  # Use add_user method
             if result.get('is_successful'):
                 self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
@@ -253,10 +254,10 @@ class LoginScreen(BaseScreen):
             instance (Button): The button instance that triggered this method.
         """
         try:
-            # Assuming the database connection string is stored as an environment variable
+            auth_manager = AuthenticationManager('database.db')  # Initialize AuthenticationManager
             db_connection_string = os.environ.get('DB_CONNECTION_STRING', 'C:\\Workout-Tracker-App\\database.db')
             conn = sqlite3.connect(db_connection_string)
-            result = db_setup.verify_login(self.email.text, self.password.text, conn)
+            result = auth_manager.verify_login(self.email.text, self.password.text, conn)  # Use verify_login method
             if result:
                 self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
@@ -395,7 +396,8 @@ class MyApp(App):
             Manager: The root widget.
         """
         # Initialize the database
-        db_setup.initialize_database("database.db")
+        db_manager = DatabaseManager("database.db")  # Initialize DatabaseManager
+        db_manager.initialize_database()  # Initialize database
         sm = Manager()
         Window.bind(on_keyboard=sm.go_back) # bind back button
         sm.current = 'onboarding' # set the first screen
