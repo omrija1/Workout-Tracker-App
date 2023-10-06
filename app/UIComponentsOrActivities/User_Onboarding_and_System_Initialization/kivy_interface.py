@@ -51,6 +51,16 @@ class BaseScreen(Screen):
         self.layout.add_widget(widget)
 
     def displayPop(self, pop_title,pop_label_text):
+        """
+        Displays a popup to the active screen
+
+        Args:
+            pop_title: Title for Popup window
+            pop_label_text: Text for Label inside Popup window
+
+        """
+
+        # Create Popup
         pop = Popup(title=pop_title,
                     content=Label(text=pop_label_text),
                     size_hint=(None,None), size=(400, 400))
