@@ -53,7 +53,10 @@ class BaseScreen(Screen):
     def displayPop(self, pop_title,pop_label_text):
         pop = Popup(title=pop_title,
                     content=Label(text=pop_label_text),
-                    size_hint=(None,None), size=(400,400))
+                    size_hint=(None,None), size=(400, 400))
+
+        # Display Popup window to screen
+        pop.open()
 
 class UserOnboarding(BaseScreen):
     """
@@ -266,8 +269,10 @@ class LoginScreen(BaseScreen):
             conn = sqlite3.connect(db_connection_string)
             result = auth_manager.verify_login(self.email.text, self.password.text, conn)  # Use verify_login method
             if result:
+
                 self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
+                self.displayPop("Login Successful", "Welcome to the Main Dashboard")
             else:
                 self.display_message("Invalid email or password.")
         except Exception as e:
