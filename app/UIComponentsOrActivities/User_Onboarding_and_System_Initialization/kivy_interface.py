@@ -5,6 +5,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from kivy.logger import Logger
 # Import statements for other dependencies
@@ -48,6 +49,12 @@ class BaseScreen(Screen):
             widget (Widget): The Kivy widget to add..
         """
         self.layout.add_widget(widget)
+
+    def displayPop(self, pop_title,pop_label_text):
+        pop = Popup(title=pop_title,
+                    content=Label(text=pop_label_text),
+                    size_hint=(None,None), size=(400,400))
+
 class UserOnboarding(BaseScreen):
     """
     Screen for user onboarding.
