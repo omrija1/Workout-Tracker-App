@@ -1,4 +1,5 @@
 # Import statements for Kivy framework
+from venv import logger
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -13,6 +14,11 @@ from db_setup import DatabaseManager, UserManager, AuthenticationManager
 import os
 import sqlite3
 from dotenv import load_dotenv
+from quote_manager import QuoteManager  # Import the QuoteManager class
+from datetime import datetime
+
+
+
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -41,15 +47,13 @@ class BaseScreen(Screen):
         self.layout = BoxLayout(orientation=layout_orientation)
         self.add_widget(self.layout)
     
-    def add_widget_to_layout(self, widget):
+    def init_ui(self):
         """
-        Add a widget to the existing layout.
-        
-        Args:
-            widget (Widget): The Kivy widget to add..
+        Initialize the UI elements for the screen.
+        This method should be overridden by derived screen classes.
         """
-        self.layout.add_widget(widget)
-
+        Logger.warning("BaseScreen: init_ui method not overridden in derived class")
+    
     def displayPop(self, pop_title,pop_label_text):
         """
         Displays a popup to the active screen
@@ -67,6 +71,32 @@ class BaseScreen(Screen):
 
         # Display Popup window to screen
         pop.open()
+
+    def display_message(self, message: str):
+        """
+        Display a message on the screen and reinitialize the UI.
+        
+        Args:
+            message (str): The message to display.
+        """
+        self.layout.clear_widgets()
+        self.layout.add_widget(Label(text=message, size_hint_y=None, height=30, font_size=18))
+        self.init_ui()
+        
+    def create_text_input(self, hint_text: str, password: bool = False) -> TextInput:
+        """
+        Create and return a text input field.
+        
+        Args:
+            hint_text (str): Placeholder text for the input field.
+            password (bool): Whether this field should hide the text. Defaults to False.
+            
+        Returns:
+            TextInput: The created text input field.
+        """
+        text_input = TextInput(hint_text=hint_text, password=password, size_hint_y=None, height=30)
+        self.layout.add_widget(text_input)
+        return text_input
 
 class UserOnboarding(BaseScreen):
     """
@@ -89,8 +119,8 @@ class UserOnboarding(BaseScreen):
 
     def init_ui(self):
         """Initialize the UI elements for the user onboarding screen."""
-        self.add_widget_to_layout(Label(text='Welcome!', size_hint_y=None, height=30, font_size=24))
-        self.add_widget_to_layout(Button(text='Press to Continue', size_hint_y=None, height=50, on_press=self.show_register_login))
+        self.layout.add_widget(Label(text='Welcome!', size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(Button(text='Achieve Harmony. Push Your Limits!', size_hint_y=None, height=50, on_press=self.show_register_login))
     
     def show_register_login(self, instance):
         """
@@ -122,9 +152,9 @@ class RegisterLogin(BaseScreen):
 
     def init_ui(self):
         """Initialize the UI elements for the register or login choice screen."""
-        self.add_widget_to_layout(Label(text='Choose an Option:', size_hint_y=None, height=30, font_size=18))
-        self.add_widget_to_layout(Button(text='Register', size_hint_y=None, height=50, on_press=self.show_register_form))
-        self.add_widget_to_layout(Button(text='Login', size_hint_y=None, height=50, on_press=self.show_login_form))
+        self.layout.add_widget(Label(text='Choose an Option:', size_hint_y=None, height=30, font_size=18))
+        self.layout.add_widget(Button(text='Register', size_hint_y=None, height=50, on_press=self.show_register_form))
+        self.layout.add_widget(Button(text='Login', size_hint_y=None, height=50, on_press=self.show_login_form))
         
     def show_register_form(self, instance):
         """
@@ -174,22 +204,8 @@ class RegisterScreen(BaseScreen):
         self.username = self.create_text_input('Username')
         self.email = self.create_text_input('Email')
         self.password = self.create_text_input('Password', password=True)
-        self.add_widget_to_layout(Button(text='Submit', size_hint_y=None, height=50, on_press=self.register_user))
+        self.layout.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.register_user))
         
-    def create_text_input(self, hint_text: str, password: bool = False) -> TextInput:
-        """
-        Create and return a text input field.
-        
-        Args:
-            hint_text (str): Placeholder text for the input field.
-            password (bool): Whether this field should hide the text. Defaults to False.
-            
-        Returns:
-            TextInput: The created text input field.
-        """
-        text_input = TextInput(hint_text=hint_text, password=password, size_hint_y=None, height=30)
-        self.add_widget_to_layout(text_input)
-        return text_input
 
     def register_user(self, instance):
         """
@@ -210,16 +226,7 @@ class RegisterScreen(BaseScreen):
         except Exception as e:
             self.display_message(f"An error occurred: {e}")
 
-    def display_message(self, message: str):
-        """
-        Display a message on the screen and reinitialize the UI.
-        
-        Args:
-            message (str): The message to display.
-        """
-        self.layout.clear_widgets()
-        self.add_widget_to_layout(Label(text=message, size_hint_y=None, height=30, font_size=18))
-        self.init_ui()
+
 class LoginScreen(BaseScreen):
     """
     Screen for user login.
@@ -249,22 +256,7 @@ class LoginScreen(BaseScreen):
         """Initialize the UI elements for the login screen."""
         self.email = self.create_text_input('Email')
         self.password = self.create_text_input('Password', password=True)
-        self.add_widget_to_layout(Button(text='Submit', size_hint_y=None, height=50, on_press=self.login_user))
-
-    def create_text_input(self, hint_text: str, password: bool = False) -> TextInput:
-        """
-        Create and return a text input field.
-        
-        Args:
-            hint_text (str): Placeholder text for the input field.
-            password (bool): Whether this field should hide the text. Defaults to False.
-            
-        Returns:
-            TextInput: The created text input field.
-        """
-        text_input = TextInput(hint_text=hint_text, password=password, size_hint_y=None, height=30)
-        self.add_widget_to_layout(text_input)
-        return text_input
+        self.layout.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.login_user))
 
     def login_user(self, instance):
         """
@@ -282,23 +274,13 @@ class LoginScreen(BaseScreen):
 
                 self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
-                self.displayPop(pop_title="Login Successful", pop_label_text="Welcome to the Main Dashboard")
+                self.displayPop(pop_title="Login Successful", pop_label_text='Welcome to the Arena of Self-Mastery')
             else:
                 self.display_message("Invalid email or password.")
                 self.displayPop(pop_title="Login Failed",pop_label_text="Incorrect email or password")
         except Exception as e:
             self.display_message(f"An error occurred: {e}")
 
-    def display_message(self, message: str):
-        """
-        Display a message on the screen and reinitialize the UI.
-        
-        Args:
-            message (str): The message to display.
-        """
-        self.layout.clear_widgets()
-        self.add_widget_to_layout(Label(text=message, size_hint_y=None, height=30, font_size=18))
-        self.init_ui()
 class MainDashboard(BaseScreen):
     """
     Screen for the main dashboard.
@@ -306,9 +288,10 @@ class MainDashboard(BaseScreen):
     Methods:
         init_ui: Initialize the user interface.
         navigate_to_screen: Navigate to a specified screen.
+        fetch_and_display_quote: Fetch today's quote and display it.
     """
     
-    def __init__(self, **kwargs):
+    def __init__(self, manager_instance,**kwargs):
         """
         Initialize the MainDashboard class.
         
@@ -316,36 +299,62 @@ class MainDashboard(BaseScreen):
             **kwargs: Additional keyword arguments.
         """
         super(MainDashboard, self).__init__(**kwargs)
-        self.init_ui()
+        self.quote_manager = QuoteManager('database.db')
+        self.manager_instance = manager_instance
+        self.fetch_and_display_quote()
 
-    def init_ui(self):
-        """Initialize the UI elements for the main dashboard."""
-        self.add_widget_to_layout(Label(text='Welcome to the Main Dashboard!', size_hint_y=None, height=30, font_size=24))
-        self.add_widget_to_layout(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=lambda instance: self.navigate_to_screen('screen_1')(instance)))
-        self.add_widget_to_layout(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=lambda instance: self.navigate_to_screen('screen_2')(instance)))
-
-
-    def navigate_to_screen(self, screen_name):
+    def fetch_and_display_quote(self):
         """
-        Navigate to the specified screen.
+        Fetch and display today's quote, adhering to logic in get_todays_quote.
+        Initialize the UI afterward with the retrieved quote text.
+        """
+        try:
+            today = datetime.today().date()  # Get today's date
+            last_displayed_date = self.quote_manager.get_last_displayed_date()
+            last_displayed_date_obj = (
+                datetime.strptime(last_displayed_date, "%Y-%m-%d").date()
+                if last_displayed_date else None
+            )
+
+            if last_displayed_date_obj is None or last_displayed_date_obj < today:
+                quote, author = self.quote_manager.get_todays_quote()
+                quote_text = (
+                    f'"{quote}" - {author}' if quote and author else 'No quote found.'
+                )
+                # Update the last displayed date
+                self.quote_manager.update_last_displayed_date(today) 
+            else:
+                quote, author = self.quote_manager.get_todays_quote()
+                quote_text = (
+                    f'"{quote}" - {author}' if quote and author else 'No last quote found.'
+                )
+            # Initialize the UI with the fetched or last displayed quote
+            self.init_ui(quote_text)
+        except Exception as e:
+            logger.error(f"Error fetching quote: {e}")
+            self.init_ui("Error fetching quote.")
+
+    def init_ui(self, quote_text):
+        """
+        Initialize the UI elements for the main dashboard.
         
         Args:
-            screen_name (str): The name of the screen to navigate to.
+            quote_text (str): The quote text to be displayed on the dashboard.
         """
-        def inner_function(instance):
-            self.manager.manage_screens(screen_name, 'add')
-        return inner_function
+        self.layout.add_widget(Label(text=quote_text, size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_1')))
+        self.layout.add_widget(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_2')))
 
 # New Screen1 and Screen2 classes
 class Screen1(BaseScreen):
     def __init__(self, **kwargs):
         super(Screen1, self).__init__(**kwargs)
-        self.add_widget_to_layout(Label(text='This is Screen 1', size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(Label(text='This is Screen 1', size_hint_y=None, height=30, font_size=24))
 
 class Screen2(BaseScreen):
     def __init__(self, **kwargs):
         super(Screen2, self).__init__(**kwargs)
-        self.add_widget_to_layout(Label(text='This is Screen 2', size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(Label(text='This is Screen 2', size_hint_y=None, height=30, font_size=24))
 
 class Manager(ScreenManager):
     """
@@ -373,12 +382,26 @@ class Manager(ScreenManager):
         self.add_widget(RegisterLogin(name='register_login'))
         self.add_widget(RegisterScreen(name='register'))
         self.add_widget(LoginScreen(name='login'))
-        self.add_widget(MainDashboard(name='main_dashboard'))
+        self.add_widget(MainDashboard(name='main_dashboard', manager_instance=self))
         self.add_widget(Screen1(name='screen_1'))
         self.add_widget(Screen2(name='screen_2'))
         
+    def navigate_to_screen(self, screen_name):
+        """
+        Navigate to the specified screen.
+        
+        Args:
+            screen_name (str): The name of the screen to navigate to.
+        """
+        def inner_function(instance):
+            self.manage_screens(screen_name, 'add')
+        return inner_function
+
     def manage_screens(self, screen_name, operation):
         if operation == 'add':
+            # Ensure only permitted screens are added to the stack
+            if self.is_authenticated and screen_name in ['login', 'register', 'register_login', 'onboarding']:
+                return
             self.screen_stack.append(screen_name)
         elif operation == 'remove' and self.screen_stack:
             self.screen_stack.pop()
@@ -386,21 +409,30 @@ class Manager(ScreenManager):
 
     def go_back(self, window, key, *args):
         if key == 27:  # The escape key corresponds to the Android back button
+            # When stack is empty, navigate/add 'main_dashboard' to stack
+            if not self.screen_stack:
+                self.current = 'main_dashboard'
+                self.screen_stack.append('main_dashboard')
+                return True
+
+# Remove the current screen from the stack
+            self.screen_stack.pop()
+
+# When stack is not empty, navigate to the next screen
             if self.screen_stack:
-                self.screen_stack.pop()
-                if self.screen_stack:
-                    next_screen = self.screen_stack[-1]
-                    if self.is_authenticated and next_screen in ['login', 'register']:
-                        return True  # Block going back to login or register if authenticated
+                next_screen = self.screen_stack[-1]
+
+# Check if authenticated and if next screen is restricted
+                if self.is_authenticated and next_screen in ['login', 'register', 'register_login', 'onboarding']:
+# Clear screen stack and set current screen to 'main_dashboard'
+                    self.screen_stack.clear()
+                    self.screen_stack.append('main_dashboard')
+                    self.current = 'main_dashboard'
+                else:
+                    # Set next screen as current and remove it from stac
                     self.current = next_screen
                     self.screen_stack.pop()
-                else:
-                    self.current = 'main_dashboard'  # Navigate to main dashboard if stack is empty
-                    self.screen_stack.append('main_dashboard')  # Add main dashboard to stack
-            else:
-                self.current = 'main_dashboard'  # Navigate to main dashboard if stack is empty
-                self.screen_stack.append('main_dashboard')  # Add main dashboard to stack
-            return True
+                return True
         return False
 
 class MyApp(App):

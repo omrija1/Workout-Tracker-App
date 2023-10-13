@@ -5,6 +5,8 @@ import bcrypt
 import sqlite3
 import re
 from dotenv import load_dotenv
+from quote_manager import QuoteManager  # Import the QuoteManager class
+
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -23,11 +25,13 @@ class DatabaseManager:
             with sqlite3.connect(self.db_connection_string) as conn:
                 logging.debug('Connecting to SQLite database.')
                 self._create_profiles_table(conn)
+                quote_manager = QuoteManager(self.db_connection_string)  # Initialize QuoteManager
+                quote_manager.initialize_quotes_database(conn)  # Initialize quotes database
                 self._set_pragmas(conn)
                 conn.commit()
             logging.debug('Database initialization complete.')
         except sqlite3.Error as e:
-            logging.error("Error initializing database: %s", str(e))
+            logging.error('Error initializing database: %s', str(e))
             raise
     
     def _create_profiles_table(self, conn):
@@ -42,8 +46,8 @@ class DatabaseManager:
 
     def _set_pragmas(self, conn):
         logging.debug('Setting PRAGMAs.')
-        conn.execute("PRAGMA secure_delete = ON")
-        conn.execute("PRAGMA foreign_keys = ON")
+        conn.execute('PRAGMA secure_delete = ON')
+        conn.execute('PRAGMA foreign_keys = ON')
 
 class UserManager(DatabaseManager):
     def __init__(self, database: str):
@@ -52,7 +56,7 @@ class UserManager(DatabaseManager):
     @staticmethod
     def validate_email_password(email: str, password: str) -> bool:
         logging.debug('Validating email and password.')
-        email_valid = re.fullmatch(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", email)
+        email_valid = re.fullmatch(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', email)
         password_strong = len(password) >= 8
         return bool(email_valid and password_strong)
 
@@ -61,29 +65,29 @@ class UserManager(DatabaseManager):
         response = {'status': 'error', 'message': '', 'is_successful': False}
 
         if len(username) > 12 or len(email) > 50:
-            response['message'] = "Username or email too long."
+            response['message'] = 'Username or email too long.'
             return response
 
         if not self.validate_email_password(email, password):
-            response['message'] = "Invalid email format or weak password."
+            response['message'] = 'Invalid email format or weak password.'
             return response
 
         try:
             with sqlite3.connect(self.db_connection_string) as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT 1 FROM profiles WHERE username = ? OR email = ? LIMIT 1", (username, email))
+                cursor.execute('SELECT 1 FROM profiles WHERE username = ? OR email = ? LIMIT 1', (username, email))
                 existing_user = cursor.fetchone()
 
                 if existing_user:
-                    response['message'] = "Username or email already exists."
+                    response['message'] = 'Username or email already exists.'
                 else:
                     salt = bcrypt.gensalt()
                     hashed_password = bcrypt.hashpw(password.encode(), salt).decode()
-                    cursor.execute("INSERT INTO profiles (username, email, password_hash) VALUES (?, ?, ?)",
+                    cursor.execute('INSERT INTO profiles (username, email, password_hash) VALUES (?, ?, ?)',
                                    (username, email, hashed_password))
                     conn.commit()
                     response['status'] = 'success'
-                    response['message'] = "User successfully registered."
+                    response['message'] = 'User successfully registered.'
                     response['is_successful'] = True
         except Exception as e:
             logging.error(f'Error in add_user: {str(e)}')
@@ -100,18 +104,18 @@ class AuthenticationManager(UserManager):
         try:
             with conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT * FROM profiles WHERE email=?", (email,))
+                cursor.execute('SELECT * FROM profiles WHERE email=?', (email,))
                 user = cursor.fetchone()
 
                 if user:
                     hashed_password = user[2]
-                    logging.debug(f"Hashed Password from DB: {hashed_password}")
+                    logging.debug(f'Hashed Password from DB: {hashed_password}')
                     return bcrypt.checkpw(password.encode(), hashed_password.encode())
         except ValueError as e:
-            logging.error(f"Invalid salt or hashed_password: {str(e)}")
+            logging.error(f'Invalid salt or hashed_password: {str(e)}')
             return False
         except Exception as e:
-            logging.error(f"An error occurred in verify_login: {str(e)}")
+            logging.error(f'An error occurred in verify_login: {str(e)}')
             return False
 
         return False
