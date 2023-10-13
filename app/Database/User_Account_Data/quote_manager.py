@@ -83,14 +83,22 @@ class QuoteManager:
         Returns:
             datetime.date: The last displayed date, or None if no date is found.
         """
-        conn = sqlite3.connect(self.db_connection_string)
-        cursor = conn.cursor()
-        # Retrieving the last displayed date from the quote_display table
-        cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
-        last_displayed = cursor.fetchone()
-        conn.close()
-        # Return the last displayed date if found, else return None
-        return last_displayed[0] if last_displayed else None
+        try:
+            conn = sqlite3.connect(self.db_connection_string)
+            cursor = conn.cursor()
+            # Retrieving the last displayed date from the quote_display table
+            cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
+            last_displayed = cursor.fetchone()
+            conn.close()
+            # Return the last displayed date if found, else return None
+            return last_displayed[0] if last_displayed else None
+        except sqlite3.Error as e:
+            logging.error(f"Database error: {e}")
+            return None
+        except Exception as e:
+            logging.error(f"Exception: {e}")
+            return None
+
 
     def update_last_displayed_date(self, date):
         """
