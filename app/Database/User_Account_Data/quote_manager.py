@@ -137,7 +137,7 @@ class QuoteManager:
             last_displayed = cursor.fetchone()  # Fetch the result.
             print(f"Last displayed: {last_displayed}")  
 
-            if last_displayed and last_displayed[0] == datetime.today().date():
+            if last_displayed and last_displayed[0] == str(datetime.today().date()):
                 cursor.execute('SELECT quote, author FROM quotes WHERE id = (SELECT MAX(id) FROM quotes)')
             else:
                 # If not, get a random quote and update the last displayed date to today.
