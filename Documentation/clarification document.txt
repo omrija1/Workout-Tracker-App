@@ -1,0 +1,117 @@
+Andriod App UI for workout tracker
+Introduction
+The Workout Tracker App aims to be a robust, fully integrated solution for professional trainers for their clients and individual fitness enthusiasts.
+It is designed to offer a highly personalized exercise experience, complete with detailed workout customization, advanced performance tracking, 
+and strategic fitness method based on proven scientific principle like progressive overload for better performance tracking
+
+
+Flows:
+Photo1: A sleek mobile app welcome screen with the title 'Workout Tracker' prominently displayed at the top. Below the title,
+there's a brief tagline: 'Achieve Harmony, Push Your Limits!' 
+with golden dark yellow button at the bottom "Your Personalized Fitness Journey Begins Here!"
+
+Photo2: 
+Choose an option button style nice:
+bodybuilding motivation background
+with two buttons:
+Register which leads to user registration from/to photo3
+Login which leads to user login form from/to photo4
+
+Photo3:
+The main content area features a user registration form with fields for username, email, password, age, height, weight, and gender. 
+A bright 'Sign Up' button at the bottom. 
+with a tagline: "The weight of your past is your strength for the future."
+
+Photo4:
+The main content area features a user login form with fields for email, password, forgot password.
+A bright 'Log In' button at the bottom. 
+
+
+For Photo3 and Photo4
+A validation error message 'Please correct the highlighted fields' appears below a field with incorrect data.
+make clone version of Photo3 and Photo4, one without the validation error and one with
+
+
+Photo5: After successful onboarding, the user is greeted with a vibrant dashboard (main dashboard) and User is greeted with a motivational quote
+the vibrant dashboard dislpays quick access icon for 'Workout Library'
+the dashboard displays "Workouts user added", and displays InitiateWorkoutSession icon or button and the aiblity for the user to initiate the selected displayed workouts he wants to use/pick, mrore context: illustration: A clean interface where users can see their workout sessions and icon to initiate their workout sessions.
+The dashboard displays navigation menu with 3 icons "access icons" (First icon to the Main Dashboard where user currently at),
+second icon is for the screen that shows recent performance metrics (for photo6)
+and third icon is for Profile Settings screen (for photo7)
+
+
+photo6:
+the screen that shows recent performance metrics in graphical form and a line graph for weight history.
+User receives an at-a-glance understanding of their fitness status, Performance metrics and weight and weight history are updated and visualized
+(Performance Metrics: Advanced tracking of weight, volume, frequency, intensity, and rest time using Progressive Overload Calculation: Automated calculation and presentation of progressive overload parameters)
+
+
+photo7:
+the screen that display profile/settings.
+User navigates to the settings or profile section.
+User can update age, height, weight, and gender.
+System saves the changes.
+Postconditions: User's profile information is updated.
+Profile Customization: As a user, I want to be able to update my age, height, weight, and gender in my profile, so that the app can provide more personalized recommendations and tracking.
+show user "reminders" icon in profile/settings, if they click on it, they go photo8
+
+ 
+ 
+photo8: reminders and notifications screen: Reminders are dynamically set and trigger notifications at the specified times. Reminders can be edited or deleted
+Displaying Reminders
+Adding/Editing Reminder
+Filling Reminder Form
+Saving Reminder
+Scheduling Notification
+Receiving Notification
+Acknowledging Notification
+logging Notification
+Deleting Reminder
+Confirming Deletion
+note: Notifications and Reminders: Dynamic setting of reminders and notifications for daily weight input and workout days.
+
+
+
+photo9: after user clicks on InitiateWorkoutSession which displayed in photo5 (main dashboard)
+System initializes the workout session to display that, setting timers and cues based on the workout details. 
+Exception Flows
+If the selected workout session fails to load, the system displays an error message.
+User Story: As a user, I want to easily initiate a planned workout session so that I can start exercising without any delays or manual setup.
+The selected workout's details should be displayed.
+On clicking "InitiateWorkoutSession," the system should display all necessary timers and cues.
+In case of any errors, appropriate messages should be displayed
+Primary Flow:
+User starts a workout session within the app.
+After completing a set, the user interacts with the app to indicate that the set is finished.
+A timer for the rest period starts in the app.
+When the rest period ends, the system provides an audio cue to alert the user that it's time to start the next set.
+Exception Flows: If the app fails to provide an audio cue, an error message is displayed.
+Postconditions: The user receives audio cues at the end of each rest period, helping them to accurately time their sets.
+illustration: A clean interface where users can define their InitiateWorkoutSession with the provided context.
+
+
+
+
+photo10: Workout Library that can be accessed through icon from photo5 (main dashboard)
+in the Workout library, A neatly organized Workout library screen. The library displays "create exercise" icon/button. and dislpays previous created/existing exercises or Workout Session that user created if there is any.
+To create Workout Session: user Clicks/press "create Workout Session" button/icon which display empty table that user can add exercises to using the "add exercise to workout session" button/icon
+to add exercise to Workout Session: where users can add his exercises to the Workout Session, user Clicks/press add exercise to Workout Session button/icon,
+add exercise to Workout Session: it displays Calendar where user can pick the day and the time for the selected exercise user wants to add to the Workout Session, 
+once user choose the day and time in the Calendar for his selected exercise to add to the Workout Session, User can choose to add another exercise after saving, which loops back to add exercise to Workout Session state.
+User can add as much as exercises as user wants to his Workout Session.
+A.previous created/existing exercises tile showcases a thumbnail of the exercise, its name, and a brief description (such as sets/reps/weight) and the option to edit/change exercise and delete exercise and duplicate exercise.
+B.previous created/existing Workout Session tile showcases a thumbnail of the exercises names inside it and displays a button/icon to accessing to the Workout Session, if pressed/clicked. user can the option to edit/change exercises and delete exercises and duplicate the entire workout session.
+"create exercise" button allows users to introduce their exercises in the Workout library screen (which once the "create exercise" button, pressed/clicked, it navigates you to photo12:).
+An error message "Failed to Choose exercise" appears below the button when there's an issue.
+illustration: A clean interface where users can define their exercises with the provided context. in the Workout library screen 
+
+
+photo11: in this screen users introduce (Create) their exercises and once they press "Save Session" button, it automatically imports/display the new exercise in the Workout The library, Exercise Creation:
+display for the user at the top, a dropdown menu to input exercise information (1.Name, 2.MuscleGroups: primary muscle and secondary muscles, 3.Training Method: Normal Sets or Drop Sets or Super Set or Negatives or AMRAP).
+display for the user at the middle, interactive form to Log Sets input and Reps or time input and weights input 
+and finally display a interactive form to input Log Rest Time between each set of his exercises
+A "Save Session" button at the bottom.
+An error message "Failed to save exercise" appears below the button when there's an issue.
+A validation message, "Please define the exercise correctly", appears for an incorrectly inputted exercise.
+User can choose to add another exercise after saving, which loops back to Create Exercise state.
+
