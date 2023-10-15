@@ -21,9 +21,6 @@ from quote_manager import QuoteManager  # Import the QuoteManager class
 from datetime import datetime
 
 
-
-
-
 # Load environment variables from the .env file
 load_dotenv()
 
@@ -102,6 +99,7 @@ class BaseScreen(Screen):
         self.layout.add_widget(text_input)
         return text_input
 
+
 class UserOnboarding(BaseScreen):
     """
     Screen for user onboarding.
@@ -134,6 +132,8 @@ class UserOnboarding(BaseScreen):
             instance (Button): The button instance that triggered this method.
         """
         self.manager.manage_screens('register_login', 'add')
+
+
 class RegisterLogin(BaseScreen):
     """
     Screen for choosing between registration and login.
@@ -177,6 +177,8 @@ class RegisterLogin(BaseScreen):
             instance (Button): The button instance that triggered this method.
         """
         self.manager.manage_screens('login', 'add')
+
+
 class RegisterScreen(BaseScreen):
     """
     Screen for user registration.
@@ -285,6 +287,7 @@ class LoginScreen(BaseScreen):
         except Exception as e:
             self.display_message(f"An error occurred: {e}")
 
+
 class MainDashboard(BaseScreen):
     """
     Screen for the main dashboard.
@@ -349,15 +352,16 @@ class MainDashboard(BaseScreen):
         self.layout.add_widget(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('settings')))
         self.layout.add_widget(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_2')))
 
+
 # New Screen1 and Screen2 classes
-
-
 class SettingsScreen(BaseScreen):
     def __init__(self, **kwargs):
         super(SettingsScreen, self).__init__(**kwargs)
 
         self.layout.add_widget(Label(text='This is your settings', size_hint_y=None, height=30, font_size=24))
         # Button to navigate to profile in profile.kv
+
+
 class ProfileScreen(BaseScreen):
     """
        Class to handle most of the functionality of the Profile Screen
@@ -422,11 +426,11 @@ class ProfileScreen(BaseScreen):
         return textinput
 
 
-
 class Screen2(BaseScreen):
     def __init__(self, **kwargs):
         super(Screen2, self).__init__(**kwargs)
         self.layout.add_widget(Label(text='This is Screen 2', size_hint_y=None, height=30, font_size=24))
+
 
 class Manager(ScreenManager):
     """
@@ -508,6 +512,7 @@ class Manager(ScreenManager):
                 return True
         return False
 
+
 class MyApp(App):
     """
     Main application class.
@@ -531,6 +536,8 @@ class MyApp(App):
         sm.current = 'onboarding' # set the first screen
         sm.manage_screens('onboarding', 'add')
         return sm
+
+
 Builder.load_file("profile.kv")
 # Main function to run the application
 if __name__ == '__main__':
