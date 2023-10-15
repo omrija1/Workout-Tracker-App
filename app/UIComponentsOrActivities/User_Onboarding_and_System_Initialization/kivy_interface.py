@@ -349,8 +349,8 @@ class MainDashboard(BaseScreen):
             quote_text (str): The quote text to be displayed on the dashboard.
         """
         self.layout.add_widget(Label(text=quote_text, size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_1')))
         self.layout.add_widget(Button(text='Go to Settings', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('settings')))
-        self.layout.add_widget(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_2')))
 
 
 # New Screen1 and Screen2 classes
@@ -426,10 +426,10 @@ class ProfileScreen(BaseScreen):
         return textinput
 
 
-class Screen2(BaseScreen):
+class Screen1(BaseScreen):
     def __init__(self, **kwargs):
-        super(Screen2, self).__init__(**kwargs)
-        self.layout.add_widget(Label(text='This is Screen 2', size_hint_y=None, height=30, font_size=24))
+        super(Screen1, self).__init__(**kwargs)
+        self.layout.add_widget(Label(text='This is Screen 1', size_hint_y=None, height=30, font_size=24))
 
 
 class Manager(ScreenManager):
@@ -461,7 +461,7 @@ class Manager(ScreenManager):
         self.add_widget(MainDashboard(name='main_dashboard', manager_instance=self))
         self.add_widget(SettingsScreen(name='settings'))
         self.add_widget(ProfileScreen(name='profile'))
-        self.add_widget(Screen2(name='screen_2'))
+        self.add_widget(Screen1(name='screen_1'))
         
     def navigate_to_screen(self, screen_name):
         """
