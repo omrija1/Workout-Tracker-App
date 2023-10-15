@@ -349,7 +349,7 @@ class MainDashboard(BaseScreen):
             quote_text (str): The quote text to be displayed on the dashboard.
         """
         self.layout.add_widget(Label(text=quote_text, size_hint_y=None, height=30, font_size=24))
-        self.layout.add_widget(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('settings')))
+        self.layout.add_widget(Button(text='Go to Settings', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('settings')))
         self.layout.add_widget(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_2')))
 
 
