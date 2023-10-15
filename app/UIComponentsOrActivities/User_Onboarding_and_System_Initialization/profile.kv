@@ -1,0 +1,50 @@
+# KV for Profile and Settings Screen
+<ProfileScreen>:
+    anchor_name: a_name
+    box_name: b_name
+    grid_name: g_name
+    return_button: rb_btn
+    update_button: up_btn
+    slider: slider
+    label_slider: lbslider
+    BoxLayout:
+        orientation: "vertical"
+
+        # Grid Layout for Profile Settings
+        GridLayout:
+            id: g_name
+            cols: 2
+
+            Label:
+                id: lbslider
+                size_hint: 0.5,1
+                text: f"Current Weight: {int(slider.value)}"
+            Slider:
+                id: slider
+                min_value: 1
+                max_value: 500
+                value: 25
+
+
+
+
+        AnchorLayout:
+            anchor_name: a_name
+            id: a_name
+            size_hint: 1,0.1
+            BoxLayout:
+                id: b_name
+                orientation: "horizontal"
+                Button:
+                    id: rb_btn
+                    on_press: app.root.manage_screens("settings","remove"); print(f"Stack after Back: {app.root.screen_stack}")
+                Button:
+                    id: up_btn
+                    #text: f"{root.app}"
+                    #on_press:
+
+
+<SettingsScreen>
+    Button:
+        text: "Go to Profile"
+        on_press: app.root.manage_screens("profile","add");print(f"Root: {app.root.screen_stack}")
