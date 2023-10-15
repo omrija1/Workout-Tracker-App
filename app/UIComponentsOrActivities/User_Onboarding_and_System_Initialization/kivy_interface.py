@@ -1,5 +1,6 @@
 # Import statements for Kivy framework
 from venv import logger
+import logger
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -9,6 +10,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from kivy.logger import Logger
+from kivy.lang.builder import Builder
+from kivy.properties import ObjectProperty
 # Import statements for other dependencies
 from db_setup import DatabaseManager, UserManager, AuthenticationManager  
 import os
@@ -16,6 +19,7 @@ import sqlite3
 from dotenv import load_dotenv
 from quote_manager import QuoteManager  # Import the QuoteManager class
 from datetime import datetime
+
 
 
 
@@ -342,14 +346,82 @@ class MainDashboard(BaseScreen):
             quote_text (str): The quote text to be displayed on the dashboard.
         """
         self.layout.add_widget(Label(text=quote_text, size_hint_y=None, height=30, font_size=24))
-        self.layout.add_widget(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_1')))
+        self.layout.add_widget(Button(text='Go to Screen 1', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('settings')))
         self.layout.add_widget(Button(text='Go to Screen 2', size_hint_y=None, height=50, on_press=self.manager_instance.navigate_to_screen('screen_2')))
 
 # New Screen1 and Screen2 classes
-class Screen1(BaseScreen):
+
+
+class SettingsScreen(BaseScreen):
     def __init__(self, **kwargs):
-        super(Screen1, self).__init__(**kwargs)
-        self.layout.add_widget(Label(text='This is Screen 1', size_hint_y=None, height=30, font_size=24))
+        super(SettingsScreen, self).__init__(**kwargs)
+
+        self.layout.add_widget(Label(text='This is your settings', size_hint_y=None, height=30, font_size=24))
+        # Button to navigate to profile in profile.kv
+class ProfileScreen(BaseScreen):
+    """
+       Class to handle most of the functionality of the Profile Screen
+
+       Methods:
+           initialize_anchor_buttons: Init text for the two buttons at bottom of the screen
+           initialize_slider: initialize label for weight slider and set max value for slider
+           initialize_grid_layout: initialize label/textput pair for each setting in profile_options[]
+           add_grid_labels: create and return standardized  label for the gridlayout
+           add_grid_textinput: create and return standardized textinput for gridlayout
+
+    """
+    anchor_name = ObjectProperty(None)          # Anchor Layout id
+    box_name = ObjectProperty(None)             # Inner Box Layout id
+    grid_name = ObjectProperty(None)            # Grid Layout id
+    return_button = ObjectProperty(None)        # Return Button id
+    update_button = ObjectProperty(None)        # Update Button id
+    slider = ObjectProperty(None)               # slider object
+    label_slider = ObjectProperty(None)         # label for slider
+
+    # todo fix bug where weight slider only goes to 100
+    # todo add user name or image to profile
+    # todo add functionality to update button to save changed values to database
+    #
+    def __init__(self, **kwargs):
+        super(ProfileScreen,self).__init__(**kwargs)
+        self.profile_options = ["weight goal", "age", "gender", "height"]       # array of profile settings
+        self.initialize_anchor_buttons()
+        self.initialize_grid_layout()
+        self.initialize_slider()
+
+    def initialize_anchor_buttons(self):
+        """ Function to intialize functionality for bottom buttons of profile screen"""
+        self.return_button.text = "Go to Settings"
+        self.update_button.text = "Update Profile"
+
+    def initialize_slider(self):
+        """Initialize label text for slider"""
+        self.label_slider.text = f"Current Weight: {self.slider.value}"
+        self.slider.max_value = 500
+
+    def initialize_grid_layout(self):
+        """add a label/textinput pair for each profile setting in profile_options to layout"""
+
+        for x in self.profile_options:
+            self.grid_name.add_widget(self.add_grid_Labels(x))
+            self.grid_name.add_widget(self.add_grid_textinput())
+
+    def add_grid_Labels(self, name):
+        """Create and return label for each value in profile_option []"""
+        # size hint for each label
+        size = (0.5, 1)
+        grid_label = Button(text=name.title(), # title each word in option
+                           size_hint=size)
+
+        return grid_label
+
+    def add_grid_textinput(self):
+        """Create and return textinput box for each setting in profile_options[]"""
+        size = (1,1)
+        textinput = TextInput(multiline = False, size_hint = size)
+        return textinput
+
+
 
 class Screen2(BaseScreen):
     def __init__(self, **kwargs):
@@ -363,7 +435,7 @@ class Manager(ScreenManager):
     Methods:
         init_screens: Initialize the various screens.
     """
-    
+
     def __init__(self, **kwargs):
         """
         Initialize the Manager class.
@@ -383,7 +455,8 @@ class Manager(ScreenManager):
         self.add_widget(RegisterScreen(name='register'))
         self.add_widget(LoginScreen(name='login'))
         self.add_widget(MainDashboard(name='main_dashboard', manager_instance=self))
-        self.add_widget(Screen1(name='screen_1'))
+        self.add_widget(SettingsScreen(name='settings'))
+        self.add_widget(ProfileScreen(name='profile'))
         self.add_widget(Screen2(name='screen_2'))
         
     def navigate_to_screen(self, screen_name):
@@ -458,7 +531,7 @@ class MyApp(App):
         sm.current = 'onboarding' # set the first screen
         sm.manage_screens('onboarding', 'add')
         return sm
-
+Builder.load_file("profile.kv")
 # Main function to run the application
 if __name__ == '__main__':
     """
