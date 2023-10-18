@@ -1,4 +1,6 @@
 # KV for Profile and Settings Screen
+<Manager>
+
 <ProfileScreen>:
     anchor_name: a_name
     box_name: b_name
@@ -44,7 +46,3 @@
                     #on_press:
 
 
-<SettingsScreen>
-    Button:
-        text: "Go to Profile"
-        on_press: app.root.manage_screens("profile","add");print(f"Root: {app.root.screen_stack}")

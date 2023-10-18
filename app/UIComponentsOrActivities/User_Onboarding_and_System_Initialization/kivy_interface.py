@@ -1,6 +1,6 @@
 # Import statements for Kivy framework
 from venv import logger
-import logger
+import logging
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -19,6 +19,7 @@ import sqlite3
 from dotenv import load_dotenv
 from quote_manager import QuoteManager  # Import the QuoteManager class
 from datetime import datetime
+from stats import Statistics_Manager
 
 
 # Load environment variables from the .env file
@@ -224,7 +225,10 @@ class RegisterScreen(BaseScreen):
             # Exception handling for database interactions
             user_manager = UserManager('database.db')  # Initialize UserManager
             result = user_manager.add_user(self.username.text, self.email.text, self.password.text)  # Use add_user method
-            if result.get('is_successful'):
+            result_stats = user_manager.add_stats_new_user(self.username.text)
+
+            if result.get('is_successful') and result_stats.get('is_successful'):
+
                 self.manager.is_authenticated = True  # Set the flag to True
                 self.manager.manage_screens('main_dashboard', 'add')
             else:
@@ -355,11 +359,11 @@ class MainDashboard(BaseScreen):
 
 # New Screen1 and Screen2 classes
 class SettingsScreen(BaseScreen):
+    # May not need this
+    settings_name = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super(SettingsScreen, self).__init__(**kwargs)
-
-        self.layout.add_widget(Label(text='This is your settings', size_hint_y=None, height=30, font_size=24))
-        # Button to navigate to profile in profile.kv
 
 
 class ProfileScreen(BaseScreen):
@@ -382,16 +386,37 @@ class ProfileScreen(BaseScreen):
     slider = ObjectProperty(None)               # slider object
     label_slider = ObjectProperty(None)         # label for slider
 
-    # todo fix bug where weight slider only goes to 100
+
     # todo add user name or image to profile
-    # todo add functionality to update button to save changed values to database
-    #
+
     def __init__(self, **kwargs):
         super(ProfileScreen,self).__init__(**kwargs)
+        self.profile_widgets = {}
         self.profile_options = ["weight goal", "age", "gender", "height"]       # array of profile settings
         self.initialize_anchor_buttons()
         self.initialize_grid_layout()
         self.initialize_slider()
+        self.init_base_functionality_to_widgets()
+
+
+    def init_base_functionality_to_widgets(self):
+
+        # currently only applies to text input widgets
+
+        # weight goal
+        self.profile_widgets["weight goal"]["widget_right"].on_text_validate = self.on_change_weightgoal
+
+        # height goal
+        self.profile_widgets["height"]["widget_right"].on_text_validate = self.on_change_height
+
+        # age goal
+        self.profile_widgets["age"]["widget_right"].on_text_validate = self.on_change_age
+
+        # gender
+        self.profile_widgets["gender"]["widget_right"].on_text_validate = self.on_change_gender
+
+        # weight sider
+        # self.profile_widgets["slider"]["widget_right"].on_text_validate = self.on_change_slider()
 
     def initialize_anchor_buttons(self):
         """ Function to intialize functionality for bottom buttons of profile screen"""
@@ -401,14 +426,40 @@ class ProfileScreen(BaseScreen):
     def initialize_slider(self):
         """Initialize label text for slider"""
         self.label_slider.text = f"Current Weight: {self.slider.value}"
-        self.slider.max_value = 500
+        self.slider.max= 500
+
+        # add widget to self.profile_widgets
+        self.profile_widgets["slider"] = {'widget_left':self.label_slider,
+                                          'widget_right':self.slider,
+                                          'value': self.slider.value}
+
+        # logging to verify widgets stores properly
+        logging.debug(f"slider\n----")
+        logging.debug(f"Left Widget: {self.profile_widgets['slider']['widget_left']}")
+        logging.debug(f"Right Widget: {self.profile_widgets['slider']['widget_right']}\n----")
+        logging.debug(f"Obj Properties Slider: {self.slider.max_value}")
 
     def initialize_grid_layout(self):
         """add a label/textinput pair for each profile setting in profile_options to layout"""
 
         for x in self.profile_options:
-            self.grid_name.add_widget(self.add_grid_Labels(x))
-            self.grid_name.add_widget(self.add_grid_textinput())
+
+            g_label = self.add_grid_Labels(x)
+            g_text = self.add_grid_textinput()
+
+            # add widgets to screen layout
+            self.grid_name.add_widget(g_label)
+            self.grid_name.add_widget(g_text)
+
+            # add widgets for x in self.profile_widgets
+            self.profile_widgets[x] = {"widget_left": g_label,
+                                       "widget_right": g_text,
+                                       "value": g_text.text}
+
+            # logging to verify widgets stores properly
+            logging.debug(f"{x}\n----")
+            logging.debug(f"Left Widget: {self.profile_widgets[x]['widget_left']}")
+            logging.debug(f"Right Widget: {self.profile_widgets[x]['widget_right']}\n----")
 
     def add_grid_Labels(self, name):
         """Create and return label for each value in profile_option []"""
@@ -425,7 +476,29 @@ class ProfileScreen(BaseScreen):
         textinput = TextInput(multiline = False, size_hint = size)
         return textinput
 
+    # Functions for updating the profile options
+    # todo implement functionality for on_change values to update database table stat
+    def on_change_slider(self):
+        pass
 
+    def on_change_age(self):
+        pass
+
+    def on_change_weight(self):
+        pass
+
+    def on_change_weightgoal(self):
+        pass
+
+    def on_change_gender(self):
+        pass
+
+    def on_change_height(self):
+        print("Uhh you pressed enter")
+        pass
+
+    def update_profile(self):
+        pass
 class Screen1(BaseScreen):
     def __init__(self, **kwargs):
         super(Screen1, self).__init__(**kwargs)
@@ -539,6 +612,7 @@ class MyApp(App):
 
 
 Builder.load_file("profile.kv")
+Builder.load_file("settings.kv")
 # Main function to run the application
 if __name__ == '__main__':
     """

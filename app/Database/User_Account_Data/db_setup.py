@@ -6,6 +6,7 @@ import sqlite3
 import re
 from dotenv import load_dotenv
 from quote_manager import QuoteManager  # Import the QuoteManager class
+from stats import Statistics_Manager
 
 
 # Load environment variables from the .env file
@@ -25,6 +26,11 @@ class DatabaseManager:
             with sqlite3.connect(self.db_connection_string) as conn:
                 logging.debug('Connecting to SQLite database.')
                 self._create_profiles_table(conn)
+
+                # Create stats manager instance and initialize stats table
+                stats_manager = Statistics_Manager()
+                stats_manager.initialize_statistics_database(conn)
+
                 quote_manager = QuoteManager(self.db_connection_string)  # Initialize QuoteManager
                 quote_manager.initialize_quotes_database(conn)  # Initialize quotes database
                 self._set_pragmas(conn)
@@ -63,7 +69,7 @@ class UserManager(DatabaseManager):
     def add_user(self, username: str, email: str, password: str) -> dict:
         logging.debug('Starting add_user function.')
         response = {'status': 'error', 'message': '', 'is_successful': False}
-
+        reponse_stats = ""
         if len(username) > 12 or len(email) > 50:
             response['message'] = 'Username or email too long.'
             return response
@@ -85,6 +91,7 @@ class UserManager(DatabaseManager):
                     hashed_password = bcrypt.hashpw(password.encode(), salt).decode()
                     cursor.execute('INSERT INTO profiles (username, email, password_hash) VALUES (?, ?, ?)',
                                    (username, email, hashed_password))
+
                     conn.commit()
                     response['status'] = 'success'
                     response['message'] = 'User successfully registered.'
@@ -94,6 +101,18 @@ class UserManager(DatabaseManager):
             response['message'] = str(e)
 
         return response
+
+    def add_stats_new_user(self, username: str) -> dict:
+        """
+        Creates entry into stats table for newly created user
+        Args:
+            username:
+
+        Returns:
+            Dictionary of response for stats entry
+        """
+        statistics_manager = Statistics_Manager()
+        return statistics_manager.add_new_stats(username)
 
 class AuthenticationManager(UserManager):
     def __init__(self, database: str):
