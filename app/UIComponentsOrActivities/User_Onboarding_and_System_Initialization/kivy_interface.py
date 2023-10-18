@@ -404,18 +404,18 @@ class ProfileScreen(BaseScreen):
         # currently only applies to text input widgets
 
         # weight goal
-        self.profile_widgets["weight goal"]["widget_right"].on_text_validate = self.on_change_weightgoal()
+        self.profile_widgets["weight goal"]["widget_right"].on_text_validate = self.on_change_weightgoal
 
         # height goal
-        self.profile_widgets["height"]["widget_right"].on_text_validate = self.on_change_height()
+        self.profile_widgets["height"]["widget_right"].on_text_validate = self.on_change_height
 
         # age goal
-        self.profile_widgets["age"]["widget_right"].on_text_validate = self.on_change_age()
+        self.profile_widgets["age"]["widget_right"].on_text_validate = self.on_change_age
 
         # gender
-        self.profile_widgets["gender"]["widget_right"].on_text_validate = self.on_change_weightgoal()
+        self.profile_widgets["gender"]["widget_right"].on_text_validate = self.on_change_gender
 
-        # weight goal
+        # weight sider
         # self.profile_widgets["slider"]["widget_right"].on_text_validate = self.on_change_slider()
 
     def initialize_anchor_buttons(self):
@@ -490,11 +490,15 @@ class ProfileScreen(BaseScreen):
     def on_change_weightgoal(self):
         pass
 
+    def on_change_gender(self):
+        pass
+
     def on_change_height(self):
         print("Uhh you pressed enter")
         pass
 
-
+    def update_profile(self):
+        pass
 class Screen1(BaseScreen):
     def __init__(self, **kwargs):
         super(Screen1, self).__init__(**kwargs)
