@@ -43,7 +43,9 @@ class QuoteManager:
         conn.execute('''
             CREATE TABLE IF NOT EXISTS quote_display (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                last_displayed DATE
+                last_displayed DATE,
+                quote TEXT,
+                author TEXT
             )
         ''')
         cursor = conn.cursor()
@@ -127,6 +129,7 @@ class QuoteManager:
         it returns that quote. Otherwise, it selects a random quote, updates the last displayed
         date, and returns the selected quote.
 
+        update_quote_display: flag to signify to update quote_display table. initialized to false
         Returns:
             tuple: The quote and author as a tuple in the format (quote, author),
             or (None, None) if not found or an error occurs.
@@ -134,7 +137,10 @@ class QuoteManager:
         try:
             with sqlite3.connect(self.db_connection_string) as conn:
                 cursor = conn.cursor()
-                
+
+                # flag to signify if newly acquired quote gets added to quote_display table
+                update_quote_display = False
+
                 # Fetch the last displayed date for the quote
                 cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
                 last_displayed = cursor.fetchone()
@@ -145,12 +151,20 @@ class QuoteManager:
                 # If the last displayed date is empty or not today, fetch a random quote and update the last displayed date
                 if last_displayed_date is None or last_displayed_date != str(datetime.today().date()):
                     cursor.execute('SELECT quote, author FROM quotes ORDER BY RANDOM() LIMIT 1')
-                    cursor.execute('UPDATE quote_display SET last_displayed = ?', (str(datetime.today().date()),))
+                    update_quote_display = True
+
+                else:
+                    cursor.execute('SELECT quote, author FROM quote_display WHERE id = 1')
+
                 # Fetch the selected quote and author
                 result = cursor.fetchone()
                 quote, author = result if result else (None, None)
                 # Commit only after successfully fetching the quote
                 if quote:
+
+                    # if a new quote was acquired update quote_display with the quote and author
+                    if update_quote_display:
+                        cursor.execute('UPDATE quote_display SET last_displayed = ?, quote = ?,author = ?', ((str(datetime.today().date()),quote,author)))
                     conn.commit()  
 
                 return quote, author
