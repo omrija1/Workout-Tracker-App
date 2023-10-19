@@ -46,3 +46,22 @@
                     #on_press:
 
 
+<SettingsScreen>:
+
+    # Inner BoxLayout for Settings UI
+    MainBoxLayout:
+        #id: settings_name
+
+# MAIN SETTINGS BOXLAYOUT
+
+<MainBoxLayout@BoxLayout>:
+    id: settings_name
+
+    orientation: "vertical"
+    Button:
+        text: "Go to Profile"
+        on_press: app.root.manage_screens("profile","add");print(f"Root: {app.root.screen_stack}");print(f"Button: {settings_name}")
+    Image:
+        source: "../../../files/images/cake.jpg"
+        size: self.texture_size
+        fit_mode: "cover"

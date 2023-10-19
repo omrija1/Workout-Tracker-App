@@ -611,8 +611,8 @@ class MyApp(App):
         return sm
 
 
-Builder.load_file("profile.kv")
-Builder.load_file("settings.kv")
+# Builder.load_file("my.kv")
+# Builder.load_file("settings.kv")
 # Main function to run the application
 if __name__ == '__main__':
     """
