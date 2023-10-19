@@ -139,14 +139,13 @@ class QuoteManager:
                 cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
                 last_displayed = cursor.fetchone()
                 
-                # If the last displayed date is today, fetch the quote with the maximum ID
-                if last_displayed and last_displayed[0] == str(datetime.today().date()):
-                    cursor.execute('SELECT quote, author FROM quotes WHERE id = (SELECT MAX(id) FROM quotes)')
-                else:
-                # Otherwise, fetch a random quote and update the last displayed date
+                # Initialize last_displayed_date from the result set
+                last_displayed_date = last_displayed[0] if last_displayed else None
+                
+                # If the last displayed date is empty or not today, fetch a random quote and update the last displayed date
+                if last_displayed_date is None or last_displayed_date != str(datetime.today().date()):
                     cursor.execute('SELECT quote, author FROM quotes ORDER BY RANDOM() LIMIT 1')
                     cursor.execute('UPDATE quote_display SET last_displayed = ?', (str(datetime.today().date()),))
-                    
                 # Fetch the selected quote and author
                 result = cursor.fetchone()
                 quote, author = result if result else (None, None)
