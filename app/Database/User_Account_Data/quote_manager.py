@@ -1,3 +1,4 @@
+from typing import Tuple, Union
 import sqlite3
 import os
 import logging
@@ -120,42 +121,45 @@ class QuoteManager:
             print(f"Exception in _query: {e}")
 
 
-    def get_todays_quote(self):
+    def get_todays_quote(self) -> Union[Tuple[str, str], Tuple[None, None]]:
         """
-        Retrieves today's quote. If the last displayed quote was shown today, it returns that quote.
-        Otherwise, it selects a random quote, updates the last displayed date, and returns the selected quote.
+        Retrieves today's quote from the database. If the last displayed quote was shown today,
+        it returns that quote. Otherwise, it selects a random quote, updates the last displayed
+        date, and returns the selected quote.
 
         Returns:
-        tuple: The quote and author in the format (quote, author), or (None, None) if not found.
+            tuple: The quote and author as a tuple in the format (quote, author),
+            or (None, None) if not found or an error occurs.
         """
         try:
-            conn = sqlite3.connect(self.db_connection_string)  # Establish a connection to the SQLite database.
-            cursor = conn.cursor()  # Create a cursor object using the cursor() method.
+            with sqlite3.connect(self.db_connection_string) as conn:
+                cursor = conn.cursor()
+                
+                # Fetch the last displayed date for the quote
+                cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
+                last_displayed = cursor.fetchone()
+                
+                # If the last displayed date is today, fetch the quote with the maximum ID
+                if last_displayed and last_displayed[0] == str(datetime.today().date()):
+                    cursor.execute('SELECT quote, author FROM quotes WHERE id = (SELECT MAX(id) FROM quotes)')
+                else:
+                # Otherwise, fetch a random quote and update the last displayed date
+                    cursor.execute('SELECT quote, author FROM quotes ORDER BY RANDOM() LIMIT 1')
+                    cursor.execute('UPDATE quote_display SET last_displayed = ?', (str(datetime.today().date()),))
+                    
+                # Fetch the selected quote and author
+                result = cursor.fetchone()
+                quote, author = result if result else (None, None)
+                # Commit only after successfully fetching the quote
+                if quote:
+                    conn.commit()  
 
-        # Check if the last displayed date is today and return the same quote if so.
-            cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
-            last_displayed = cursor.fetchone()  # Fetch the result.
-            print(f"Last displayed: {last_displayed}")  
-
-            if last_displayed and last_displayed[0] == str(datetime.today().date()):
-                cursor.execute('SELECT quote, author FROM quotes WHERE id = (SELECT MAX(id) FROM quotes)')
-            else:
-                # If not, get a random quote and update the last displayed date to today.
-                cursor.execute('SELECT quote, author FROM quotes ORDER BY RANDOM() LIMIT 1')
-                cursor.execute('UPDATE quote_display SET last_displayed = ? WHERE id = 1', (datetime.today().date(),))
-                conn.commit()  # Commit the transaction.
-
-            result = cursor.fetchone()
-            quote, author = result if result else (None, None)  # Retrieve the selected quote and author.
-            conn.close()  # Close the database connection.
-            print(f"Fetched quote: {quote}, author: {author}")
-        # Return the selected quote and author, or None if not found.
-        
-            return quote, author
+                return quote, author
+                
         except sqlite3.Error as e:
             logging.error(f"Database error: {e}")
-            return None, None
         except Exception as e:
             logging.error(f"Exception: {e}")
-            print(f"Error in get_todays_quote: {e}")
-            return None, None
+
+        return None, None  # Unified return for all errors
+
