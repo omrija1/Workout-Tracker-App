@@ -612,7 +612,7 @@ class MyApp(App):
 
 
 Builder.load_file("C:\\Workout-Tracker-App\\app\\Kivy_files\\profile.kv")
-Builder.load_file("C:\\Workout-Tracker-App\\app\\Kivy_files\\settings.kv")
+# Builder.load_file("C:\\Workout-Tracker-App\\app\\Kivy_files\\settings.kv")
 # Main function to run the application
 if __name__ == '__main__':
     """
