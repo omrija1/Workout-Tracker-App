@@ -64,10 +64,7 @@ class QuoteManager:
         Args:
             conn (sqlite3.Connection): The SQLite connection object.
         """
-        # Inserting predefined quotes into the quotes table
-        conn.executemany('''
-            INSERT INTO quotes (quote, author) VALUES (?, ?)
-        ''', [
+        data_quotes = [
             ("The body is the servant of the mind; train both.", "Socrates"),
             ("Strength does not come from physical capacity, but from an indomitable will.", "Plato"),
             ("We are what we repeatedly do. Excellence, then, is not an act, but a habit.", "Aristotle"),
@@ -75,7 +72,11 @@ class QuoteManager:
             ("The pain you feel today will be the strength you feel tomorrow.", "GYMRATS"),
             ("If you still look good at the end of your workout, you didn’t train hard enough.", "GYMRATS"),
             ("For though the righteous fall seven times, they rise again.", "Proverbs 24:16 (NIV)")
-        ])
+        ]
+        # Inserting predefined quotes into the quotes table
+        conn.executemany('''
+            INSERT INTO quotes (quote, author) VALUES (?, ?)
+        ''',data_quotes )
         conn.commit()
 
     def get_last_displayed_date(self):
@@ -167,8 +168,10 @@ class QuoteManager:
                 return quote, author
                 
         except sqlite3.Error as e:
+            print(f"Sql Error: {e}")
             logging.error(f"Database error: {e}")
         except Exception as e:
+            print(f"Other Error: {e}")
             logging.error(f"Exception: {e}")
 
         return None, None  # Unified return for all errors
