@@ -1,1 +1,0 @@
-Backend logic for data validation, performance metrics calculation, and weight history management.

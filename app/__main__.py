@@ -10,11 +10,15 @@ if __name__ == '__main__':
     import os
     os.environ['DB_CONNECTION_STRING'] = 'C:\\Workout-Tracker-App\\database.db'
     
-    # Database Initialization
-    
-    # Run the Kivy App
+    try:
+        # Database Initialization
+        from app.database.db_setup import DatabaseManager
+        db_manager = DatabaseManager('database.db')
+        db_manager.initialize_database()
+        
+        # Run the Kivy App
+        from app.kivy_interface import MyApp
+        MyApp().run()
 
-    from app.UIComponentsOrActivities.User_Onboarding_and_System_Initialization.kivy_interface import MyApp
-    MyApp().run()
-
-# Path: app/UIComponentsOrActivities/User_Onboarding_and_System_Initialization/kivy_interface.py
+    except Exception as e:
+        logging.exception("Exception occurred")

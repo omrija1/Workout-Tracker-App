@@ -1,1 +1,0 @@
-UI for visualizing performance metrics and weight history.

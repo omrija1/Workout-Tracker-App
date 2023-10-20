@@ -1,1 +1,0 @@
-Stores all the reminders and notifications.
