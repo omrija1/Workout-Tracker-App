@@ -33,27 +33,25 @@ class QuoteManager:
             conn (sqlite3.Connection): The SQLite connection object.
         """
         # Creating the quotes and quote_display tables if they do not exist
-        conn.execute('''
+        conn.executescript('''
             CREATE TABLE IF NOT EXISTS quotes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 quote TEXT,
                 author TEXT
-            )
-        ''')
-        conn.execute('''
+            );
             CREATE TABLE IF NOT EXISTS quote_display (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 last_displayed DATE,
                 quote TEXT,
                 author TEXT
-            )
+            );
         ''')
         cursor = conn.cursor()
         # Check if the quotes table is empty and insert sample quotes if it is
         cursor.execute('SELECT COUNT(*) FROM quotes')
-        if cursor.fetchone()[0] == 0:
+        if len(cursor.fetchall()) == 0:
             self.insert_sample_quotes(conn)
-    
+
         # Check if the quote_display table is empty and insert an initial record if it is
         cursor.execute('SELECT COUNT(*) FROM quote_display')
         if cursor.fetchone()[0] == 0:
@@ -87,19 +85,18 @@ class QuoteManager:
             datetime.date: The last displayed date, or None if no date is found.
         """
         try:
-            conn = sqlite3.connect(self.db_connection_string)
-            cursor = conn.cursor()
-            # Retrieving the last displayed date from the quote_display table
-            cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
-            last_displayed = cursor.fetchone()
-            conn.close()
-            # Return the last displayed date if found, else return None
-            return last_displayed[0] if last_displayed else None
+            with sqlite3.connect(self.db_connection_string) as conn:
+                cursor = conn.cursor()
+                # Retrieving the last displayed date from the quote_display table
+                cursor.execute('SELECT last_displayed FROM quote_display WHERE id = 1')
+                last_displayed = cursor.fetchone()
+                # Return the last displayed date if found, else return None
+                return last_displayed[0] if last_displayed else None
         except sqlite3.Error as e:
-            logging.error(f"Database error: {e}")
+            logging.error("Database error: %s", e)
             return None
         except Exception as e:
-            logging.error(f"Exception: {e}")
+            logging.exception("Exception:")
             return None
 
 
