@@ -49,7 +49,7 @@ class QuoteManager:
         cursor = conn.cursor()
         # Check if the quotes table is empty and insert sample quotes if it is
         cursor.execute('SELECT COUNT(*) FROM quotes')
-        if len(cursor.fetchall()) == 0:
+        if cursor.fetchone()[0] == 0:
             self.insert_sample_quotes(conn)
 
         # Check if the quote_display table is empty and insert an initial record if it is
