@@ -1,0 +1,19 @@
+Single-Purpose Schema:
+User Profile Table
+Exercise Table. exercise ID, user ID, name, etc. (exercise data)
+Performance Metrics Table. MetricID, SessionID, ExerciseID, sets, reps, weight  (workout data)
+
+Clarification:
+Performance Metrics Table: stores the progressive overload method info, and use algoirthm when reciece workout session to generate the data (Frequency.Intensity,Rest Period etc...)
+Exercise Table: Allows users to create and edit and save new exercises, Each custom exercise can have attributes.
+User Profile Table: username, password, email, settings, age, weight, height etc....
+
+
+
+Denormalized Schema:
+Workout Session Table. SessionID, UserID, workout data etccc
+
+
+Clarification for Denormalized Schema:
+Denormalization is used in the Workout Session Table to store exercise performance data within each session, reducing the need for complex joins when retrieving session details
+We store metrics like the number of sets, reps, and weight lifted for each exercise directly within this table etc...
