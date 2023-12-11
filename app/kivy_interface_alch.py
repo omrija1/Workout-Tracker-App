@@ -1,28 +1,26 @@
 # Import statements for Kivy framework
 from kivy.app import App
-
-
-from database.models import Profile, Session
+from app.Database.models import Profile
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from kivy.logger import Logger
 from kivy.lang.builder import Builder
 from kivy.properties import ObjectProperty
 # Import statements for other dependencies
-from app.database.db_setup_alch import DatabaseManager, UserManager, AuthenticationManager
-import os
-import sqlite3
+from app.Database.db_setup_alch import DatabaseManager, UserManager, AuthenticationManager
 from dotenv import load_dotenv
 from app.lib.quote_manager import QuoteManager
 from datetime import datetime
+from kivymd.uix.screen import MDScreen
+from sqlalchemy.orm import Session
 
 
-class BaseScreen(Screen):
+class BaseScreen(MDScreen):
     """
     Base class for different screens in the app.
 
@@ -50,7 +48,8 @@ class BaseScreen(Screen):
         Initialize the UI elements for the screen.
         This method should be overridden by derived screen classes.
         """
-        Logger.warning("BaseScreen: init_ui method not overridden in derived class")
+        Logger.warning(
+            "BaseScreen: init_ui method not overridden in derived class")
 
     def displayPop(self, pop_title, pop_label_text):
         """
@@ -78,7 +77,8 @@ class BaseScreen(Screen):
             message (str): The message to display.
         """
         self.layout.clear_widgets()
-        self.layout.add_widget(Label(text=message, size_hint_y=None, height=30, font_size=18))
+        self.layout.add_widget(
+            Label(text=message, size_hint_y=None, height=30, font_size=18))
         self.init_ui()
 
     def create_text_input(self, hint_text: str, password: bool = False) -> TextInput:
@@ -92,7 +92,8 @@ class BaseScreen(Screen):
         Returns:
             TextInput: The created text input field.
         """
-        text_input = TextInput(hint_text=hint_text, password=password, size_hint_y=None, height=30)
+        text_input = TextInput(hint_text=hint_text,
+                               password=password, size_hint_y=None, height=30)
         self.layout.add_widget(text_input)
         return text_input
 
@@ -118,7 +119,8 @@ class UserOnboarding(BaseScreen):
 
     def init_ui(self):
         """Initialize the UI elements for the user onboarding screen."""
-        self.layout.add_widget(Label(text='Welcome!', size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(
+            Label(text='Welcome!', size_hint_y=None, height=30, font_size=24))
         self.layout.add_widget(Button(text='Achieve Harmony. Push Your Limits!', size_hint_y=None, height=50,
                                       on_press=self.show_register_login))
 
@@ -161,7 +163,8 @@ class LoginScreen(BaseScreen):
         """Initialize the UI elements for the login screen."""
         self.email = self.create_text_input('Email')
         self.password = self.create_text_input('Password', password=True)
-        self.layout.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.login_user))
+        self.layout.add_widget(
+            Button(text='Submit', size_hint_y=None, height=50, on_press=self.login_user))
 
     def login_user(self, instance):
         """
@@ -174,7 +177,8 @@ class LoginScreen(BaseScreen):
 
             auth_manager = AuthenticationManager()  # Initialize AuthenticationManager
 
-            result = auth_manager.verify_login(self.email.text.lower(), self.password.text)  # Use verify_login method
+            result = auth_manager.verify_login(
+                self.email.text.lower(), self.password.text)  # Use verify_login method
             if result:
 
                 self.manager.is_authenticated = True  # Set the flag to True
@@ -184,12 +188,14 @@ class LoginScreen(BaseScreen):
                 # user_manager.update_user_daily_quote(self.manager.user)
                 self.manager.manage_screens('main_dashboard', 'add')
 
-                self.displayPop(pop_title="Login Successful", pop_label_text=f'Welcome to the Arena of Self-Mastery\n')
+                self.displayPop(pop_title="Login Successful",
+                                pop_label_text=f'Welcome to the Arena of Self-Mastery\n')
 
                 # self.displayPop(pop_title="Motivational Quote of Day", pop_label_text = f"{self.manager.user.quote}\n{self.manager.user.author}")
             else:
                 self.display_message("Invalid email or password.")
-                self.displayPop(pop_title="Login Failed", pop_label_text="Incorrect email or password")
+                self.displayPop(pop_title="Login Failed",
+                                pop_label_text="Incorrect email or password")
         except Exception as e:
             self.display_message(f"An error occurred: {e}")
 
@@ -216,9 +222,12 @@ class RegisterLogin(BaseScreen):
 
     def init_ui(self):
         """Initialize the UI elements for the register or login choice screen."""
-        self.layout.add_widget(Label(text='Choose an Option:', size_hint_y=None, height=30, font_size=18))
-        self.layout.add_widget(Button(text='Register', size_hint_y=None, height=50, on_press=self.show_register_form))
-        self.layout.add_widget(Button(text='Login', size_hint_y=None, height=50, on_press=self.show_login_form))
+        self.layout.add_widget(
+            Label(text='Choose an Option:', size_hint_y=None, height=30, font_size=18))
+        self.layout.add_widget(Button(
+            text='Register', size_hint_y=None, height=50, on_press=self.show_register_form))
+        self.layout.add_widget(Button(
+            text='Login', size_hint_y=None, height=50, on_press=self.show_login_form))
 
     def show_register_form(self, instance):
         """
@@ -267,18 +276,17 @@ class ProfileScreen(BaseScreen):
     slider = ObjectProperty(None)               # slider object
     label_slider = ObjectProperty(None)         # label for slider
 
-
     # todo add user name or image to profile
 
     def __init__(self, **kwargs):
-        super(ProfileScreen,self).__init__(**kwargs)
+        super(ProfileScreen, self).__init__(**kwargs)
         self.profile_widgets = {}
-        self.profile_options = ["weight goal", "age", "gender", "height"]       # array of profile settings
+        # array of profile settings
+        self.profile_options = ["weight goal", "age", "gender", "height"]
         self.initialize_anchor_buttons()
         self.initialize_grid_layout()
         self.initialize_slider()
         self.init_base_functionality_to_widgets()
-
 
     def init_base_functionality_to_widgets(self):
 
@@ -307,17 +315,19 @@ class ProfileScreen(BaseScreen):
     def initialize_slider(self):
         """Initialize label text for slider"""
         self.label_slider.text = f"Current Weight: {self.slider.value}"
-        self.slider.max= 500
+        self.slider.max = 500
 
         # add widget to self.profile_widgets
-        self.profile_widgets["slider"] = {'widget_left':self.label_slider,
-                                          'widget_right':self.slider,
+        self.profile_widgets["slider"] = {'widget_left': self.label_slider,
+                                          'widget_right': self.slider,
                                           'value': self.slider.value}
 
         # logging to verify widgets stores properly
         Logger.debug(f"slider\n----")
-        Logger.debug(f"Left Widget: {self.profile_widgets['slider']['widget_left']}")
-        Logger.debug(f"Right Widget: {self.profile_widgets['slider']['widget_right']}\n----")
+        Logger.debug(
+            f"Left Widget: {self.profile_widgets['slider']['widget_left']}")
+        Logger.debug(
+            f"Right Widget: {self.profile_widgets['slider']['widget_right']}\n----")
         Logger.debug(f"Obj Properties Slider: {self.slider.max_value}")
 
     def initialize_grid_layout(self):
@@ -339,22 +349,24 @@ class ProfileScreen(BaseScreen):
 
             # logging to verify widgets stores properly
             Logger.debug(f"{x}\n----")
-            Logger.debug(f"Left Widget: {self.profile_widgets[x]['widget_left']}")
-            Logger.debug(f"Right Widget: {self.profile_widgets[x]['widget_right']}\n----")
+            Logger.debug(
+                f"Left Widget: {self.profile_widgets[x]['widget_left']}")
+            Logger.debug(
+                f"Right Widget: {self.profile_widgets[x]['widget_right']}\n----")
 
     def add_grid_Labels(self, name):
         """Create and return label for each value in profile_option []"""
         # size hint for each label
         size = (0.5, 1)
-        grid_label = Button(text=name.title(), # title each word in option
-                           size_hint=size)
+        grid_label = Button(text=name.title(),  # title each word in option
+                            size_hint=size)
 
         return grid_label
 
     def add_grid_textinput(self):
         """Create and return textinput box for each setting in profile_options[]"""
-        size = (1,1)
-        textinput = TextInput(multiline = False, size_hint = size)
+        size = (1, 1)
+        textinput = TextInput(multiline=False, size_hint=size)
         return textinput
 
     # Functions for updating the profile options
@@ -385,7 +397,8 @@ class ProfileScreen(BaseScreen):
 class Screen1(BaseScreen):
     def __init__(self, **kwargs):
         super(Screen1, self).__init__(**kwargs)
-        self.layout.add_widget(Label(text='This is Screen 1', size_hint_y=None, height=30, font_size=24))
+        self.layout.add_widget(
+            Label(text='This is Screen 1', size_hint_y=None, height=30, font_size=24))
 
 
 class MainDashboard(BaseScreen):
@@ -419,7 +432,7 @@ class MainDashboard(BaseScreen):
             user_manager = UserManager()
             user_manager.update_user_daily_quote(self.manager.user)
             quote_text = (
-                f'"{self.manager.user.quote}" - {self.maanger.user.author}' if self.manager.user.quote and self.manager.user.author else 'No last quote found.'
+                f'"{self.manager.user.quote}" - {self.manager.user.author}' if self.manager.user.quote and self.manager.user.author else 'No last quote found.'
             )
             # Initialize the UI with the fetched or last displayed quote
             self.init_ui(quote_text)
@@ -441,6 +454,8 @@ class MainDashboard(BaseScreen):
                                       on_press=self.manager_instance.navigate_to_screen('settings')))
 
 # todo: remove import of Profile model
+
+
 class RegisterScreen(BaseScreen):
     """
     Screen for user registration.
@@ -473,8 +488,8 @@ class RegisterScreen(BaseScreen):
         self.email = self.create_text_input('Email')
         self.password = self.create_text_input('Password', password=True)
 
-
-        self.layout.add_widget(Button(text='Submit', size_hint_y=None, height=50, on_press=self.register_user))
+        self.layout.add_widget(
+            Button(text='Submit', size_hint_y=None, height=50, on_press=self.register_user))
 
     def register_user(self, instance):
         """
@@ -487,7 +502,8 @@ class RegisterScreen(BaseScreen):
             # Exception handling for database interactions
             user_manager = UserManager()  # Initialize UserManager
 
-            result = user_manager.add_user(username=self.username.text, email=self.email.text, password=self.password.text)  # Use add_user method
+            result = user_manager.add_user(
+                username=self.username.text, email=self.email.text, password=self.password.text)  # Use add_user method
 
             if result.get('is_successful'):
 
@@ -495,7 +511,8 @@ class RegisterScreen(BaseScreen):
                 self.manager.manage_screens('main_dashboard', 'add')
 
             else:
-                self.display_message(result.get('message', 'An unknown error occurred.'))
+                self.display_message(result.get(
+                    'message', 'An unknown error occurred.'))
         except Exception as e:
             self.display_message(f"An error occurred: {e}")
 
@@ -528,7 +545,8 @@ class Manager(ScreenManager):
         self.add_widget(RegisterLogin(name='register_login'))
         self.add_widget(RegisterScreen(name='register'))
         self.add_widget(LoginScreen(name='login'))
-        self.add_widget(MainDashboard(name='main_dashboard', manager_instance=self))
+        self.add_widget(MainDashboard(
+            name='main_dashboard', manager_instance=self))
         self.add_widget(SettingsScreen(name='settings'))
         self.add_widget(ProfileScreen(name='profile'))
         self.add_widget(Screen1(name='screen_1'))
@@ -609,6 +627,7 @@ class MyApp(App):
         sm.current = 'onboarding'  # set the first screen
         sm.manage_screens('onboarding', 'add')
         return sm
+
 
 Builder.load_file("C:\\Workout-Tracker-App\\app\\Kivy_files\\profile.kv")
 # Builder.load_file("C:\\Workout-Tracker-App\\app\\Kivy_files\\settings.kv")

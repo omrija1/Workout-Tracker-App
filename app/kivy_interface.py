@@ -11,13 +11,13 @@ from kivy.logger import Logger
 from kivy.lang.builder import Builder
 from kivy.properties import ObjectProperty
 # Import statements for other dependencies
-from app.database.db_setup import DatabaseManager, UserManager, AuthenticationManager
+from app.Database.db_setup import DatabaseManager, UserManager, AuthenticationManager
 import os
 import sqlite3
 from dotenv import load_dotenv
 from app.lib.quote_manager import QuoteManager
 from datetime import datetime
-
+from kivymd.uix.screen import MDScreen
 
 Logger.debug('This is a debug message')
 
@@ -26,7 +26,7 @@ Logger.debug('This is a debug message')
 load_dotenv()
 
 
-class BaseScreen(Screen):
+class BaseScreen(MDScreen):
     """
     Base class for different screens in the app.
     

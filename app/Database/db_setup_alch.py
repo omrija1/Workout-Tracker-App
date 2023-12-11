@@ -5,10 +5,10 @@ import uuid
 import json
 import logging
 import bcrypt
-
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
-from app.database.models import Profile, Stats, Library, Quotes, Quote_Display,engine,create_db
+from app.Database.models import Profile, Stats, Library, Quotes, Quote_Display,engine
+
 
 # logging
 logging.basicConfig(filename='database_initialization_alch.log',
@@ -171,6 +171,8 @@ class UserManager:
 
         for x in user_list:
             self.add_user(x.username, x.email, x.password)
+
+
 
 # todo: convert authentication manager
 class AuthenticationManager:

@@ -1,1 +1,0 @@
-#for ORM (SQLAlchemy)

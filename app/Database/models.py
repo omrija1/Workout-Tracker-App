@@ -1,26 +1,32 @@
-from sqlalchemy import String, Column, TEXT, Integer, create_engine, DATE,ForeignKey
-from sqlalchemy.orm import declarative_base, Mapped, mapped_column, Session, sessionmaker, Mapped, mapped_column, \
-    relationship
+from sqlalchemy import String, Column, Integer, create_engine, DATE,ForeignKey
+from sqlalchemy.orm import relationship, mapped_column, sessionmaker, Mapped, mapped_column
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import uuid
 
-# from db_setup_alch import Base
-"<dialect>+<driver>://<username>:<password>@<host>:<port>/<database>"
-sql3_url = "sqlite3://root:pass@127.0.0.1:8080/database"
-db_url_m = "sqlite://:memory:"
-# 3 relative path 4 absolute path
 
-db_url = "sqlite:///..//database2.db"
-"sqlite://:memory:"
 
 Base = declarative_base()
-engine = create_engine(db_url)
-Session = sessionmaker(bind=engine)
-session = Session()
+
 
 
 def generate_uuid():
     return str(uuid.uuid4())
+
+
+
+class Exercise(Base):
+    __tablename__ = 'exercises'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    main_muscle_group = Column(String, nullable=False)
+    secondary_muscle_groups = Column(String)  # Assuming this is a comma-separated string
+    sets = Column(Integer, nullable=False)
+    reps = Column(Integer, nullable=False)
+    rest_time = Column(Integer, nullable=False)  # Assuming rest time is in seconds
+    training_method = Column(String, nullable=False)
+
+
 
 
 class Quotes(Base):
@@ -65,10 +71,10 @@ class Profile(Base):
         self.username = username
         self.email = email
         self.password = password
-        self.created_ts = datetime.today().date()
+        self.created_ts = datetime.now()
         self.quote = ""
         self.author = ""
-        self.last_displayed = None
+        self.last_displayed = datetime.min
 
     # Profile print function
     def display_user(self):
@@ -81,7 +87,7 @@ class Profile(Base):
     def update_quote(self, quote, author):
         self.quote = quote
         self.author = author
-        self.last_displayed = datetime.today().date()
+        self.last_displayed = datetime.now()
 
 
 
@@ -101,7 +107,7 @@ class Stats(Base):
     height: Mapped[str]
     weight: Mapped[str]
     weight_goal: Mapped[int]
-    gender: Mapped[int]
+    gender: Mapped[str]
     age: Mapped[int]
 
     # Stats init F(n)
@@ -112,9 +118,9 @@ class Stats(Base):
         self.id = id
         self.height = height
         self.weight = weight
-        self.weight_goal = weight_goal
-        self.gender = gender
-        self.age = age
+        self.weight_goal = int(weight_goal)
+        self.gender = str(gender)
+        self.age = int(age)
 
     def display_stat(self):
         print(f"Stat_id: {self.stats_id}")
@@ -151,13 +157,7 @@ class Quote_Display(Base):
 
 
 
-def create_db():
-    """Function to create the database"""
-    # Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
-
-
-# create engine - passes database url paramater
-# engine = create_engine(database_url)
+engine = create_engine('sqlite:///C:\\\\Workout-Tracker-App\\\\database.db')
+Base.metadata.create_all(engine)
 
 
