@@ -155,9 +155,15 @@ class Quote_Display(Base):
         self.quote = quote
         self.author = author
 
-
-
 engine = create_engine('sqlite:///C:\\\\Workout-Tracker-App\\\\database.db')
-Base.metadata.create_all(engine)
+def create_db():
+    """Function to create the database"""
+    # Base.metadata.drop_all(engine)
+    # Base.metadata.create_all(engine)
+
+
+
+    # Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
 
 

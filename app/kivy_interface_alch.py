@@ -1,6 +1,6 @@
 # Import statements for Kivy framework
 from kivy.app import App
-from app.Database.models import Profile
+from app.database.models import Profile
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -12,7 +12,7 @@ from kivy.logger import Logger
 from kivy.lang.builder import Builder
 from kivy.properties import ObjectProperty
 # Import statements for other dependencies
-from app.Database.db_setup_alch import DatabaseManager, UserManager, AuthenticationManager
+from app.database.db_setup_alch import DatabaseManager, UserManager, AuthenticationManager
 from dotenv import load_dotenv
 from app.lib.quote_manager import QuoteManager
 from datetime import datetime

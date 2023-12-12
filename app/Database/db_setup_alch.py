@@ -7,7 +7,7 @@ import logging
 import bcrypt
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
-from app.Database.models import Profile, Stats, Library, Quotes, Quote_Display,engine
+from app.database.models import Profile, Stats, Library, Quotes, Quote_Display,create_db,engine
 
 
 # logging
